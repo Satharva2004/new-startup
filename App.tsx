@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
+import AutomateSection from './components/AutomateSection';
 import gsap from 'gsap';
 
 const App: React.FC = () => {
@@ -23,6 +24,7 @@ const App: React.FC = () => {
       <Navigation isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
       <main>
         <Hero isDarkMode={isDarkMode} />
+        <AutomateSection isDarkMode={isDarkMode} />
       </main>
       
       {/* Footer fixed at bottom right or hidden for infinite feel */}

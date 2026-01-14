@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect, useEffect } from 'react';
+import React, { useRef, useLayoutEffect, useEffect, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import * as THREE from 'three';
 
@@ -16,40 +16,46 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const segmentsRef = useRef<THREE.Group[]>([]);
-  const scrollPosRef = useRef(0);
+  
+  // Virtual scroll position for tunnel animation (not actual page scroll)
+  const virtualScrollRef = useRef(0);
+  const [tunnelComplete, setTunnelComplete] = useState(false);
 
   // --- CONFIGURATION ---
-  // Tuned to match the reference design's density and scale
   const TUNNEL_WIDTH = 24;
   const TUNNEL_HEIGHT = 16;
-  const SEGMENT_DEPTH = 6; // Short depth for "square-ish" floor tiles
+  const SEGMENT_DEPTH = 6;
   const NUM_SEGMENTS = 14; 
-  const FOG_DENSITY = 0.02;
+  const SCROLL_SPEED = 1.5; // Multiplier for wheel delta
 
   // Grid Divisions
-  const FLOOR_COLS = 6; // Number of columns on floor/ceiling
-  const WALL_ROWS = 4;  // Number of rows on walls
+  const FLOOR_COLS = 6;
+  const WALL_ROWS = 4;
 
   // Derived dimensions
   const COL_WIDTH = TUNNEL_WIDTH / FLOOR_COLS;
   const ROW_HEIGHT = TUNNEL_HEIGHT / WALL_ROWS;
 
-  // Unsplash images - Mix of portraits, landscapes, and abstracts
+  // Camera bounds
+  const MAX_CAM_Z = -(NUM_SEGMENTS * SEGMENT_DEPTH - SEGMENT_DEPTH * 2); // -72
+  const SCROLL_NEEDED = Math.abs(MAX_CAM_Z) / 0.05; // Virtual scroll needed to complete tunnel
+
+  // Unsplash images
   const imageUrls = [
-    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&fit=crop", // Portrait
-    "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=600&fit=crop", // Portrait
-    "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600&fit=crop", // People
-    "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&fit=crop", // Portrait
-    "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&fit=crop", // Portrait
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&fit=crop", // Portrait
-    "https://images.unsplash.com/photo-1488161628813-99c974c76949?q=80&w=600&fit=crop", // People
-    "https://images.unsplash.com/photo-1521119989659-a83eee488058?q=80&w=600&fit=crop", // Abstract/Dark
-    "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&fit=crop", // Tech
-    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&fit=crop", // Portrait
-    "https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=600&fit=crop", // Abstract
-    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&fit=crop", // Abstract
-    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&fit=crop", // Portrait
-    "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=600&fit=crop", // Portrait
+    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&fit=crop",
+    "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=600&fit=crop",
+    "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600&fit=crop",
+    "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&fit=crop",
+    "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&fit=crop",
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&fit=crop",
+    "https://images.unsplash.com/photo-1488161628813-99c974c76949?q=80&w=600&fit=crop",
+    "https://images.unsplash.com/photo-1521119989659-a83eee488058?q=80&w=600&fit=crop",
+    "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&fit=crop",
+    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&fit=crop",
+    "https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=600&fit=crop",
+    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&fit=crop",
+    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&fit=crop",
+    "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=600&fit=crop",
   ];
 
   // Helper: Create a segment with grid lines and filled cells
@@ -61,45 +67,30 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
     const h = TUNNEL_HEIGHT / 2;
     const d = SEGMENT_DEPTH;
 
-    // --- 1. Grid Lines ---
-    // Start with default light mode colors; these will be updated by useEffect immediately on mount
     const lineMaterial = new THREE.LineBasicMaterial({ color: 0xb0b0b0, transparent: true, opacity: 0.5 });
     const lineGeo = new THREE.BufferGeometry();
     const vertices: number[] = [];
 
-    // A. Longitudinal Lines (Z-axis)
-    // Floor & Ceiling (varying X)
     for (let i = 0; i <= FLOOR_COLS; i++) {
       const x = -w + (i * COL_WIDTH);
-      // Floor line
       vertices.push(x, -h, 0, x, -h, -d);
-      // Ceiling line
       vertices.push(x, h, 0, x, h, -d);
     }
-    // Walls (varying Y) - excluding top/bottom corners already drawn
     for (let i = 1; i < WALL_ROWS; i++) {
       const y = -h + (i * ROW_HEIGHT);
-      // Left Wall line
       vertices.push(-w, y, 0, -w, y, -d);
-      // Right Wall line
       vertices.push(w, y, 0, w, y, -d);
     }
 
-    // B. Latitudinal Lines (Ring at z=0)
-    // Floor (Bottom edge)
     vertices.push(-w, -h, 0, w, -h, 0);
-    // Ceiling (Top edge)
     vertices.push(-w, h, 0, w, h, 0);
-    // Left Wall (Left edge)
     vertices.push(-w, -h, 0, -w, h, 0);
-    // Right Wall (Right edge)
     vertices.push(w, -h, 0, w, h, 0);
 
     lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     const lines = new THREE.LineSegments(lineGeo, lineMaterial);
     group.add(lines);
 
-    // Initial population of images
     populateImages(group, w, h, d);
 
     return group;
@@ -111,70 +102,102 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
     const cellMargin = 0.4;
 
     const addImg = (pos: THREE.Vector3, rot: THREE.Euler, wd: number, ht: number) => {
-        const url = imageUrls[Math.floor(Math.random() * imageUrls.length)];
-        const geom = new THREE.PlaneGeometry(wd - cellMargin, ht - cellMargin);
-        const mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, side: THREE.DoubleSide });
-        textureLoader.load(url, (tex) => {
+      const url = imageUrls[Math.floor(Math.random() * imageUrls.length)];
+      const geom = new THREE.PlaneGeometry(wd - cellMargin, ht - cellMargin);
+      const mat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, side: THREE.DoubleSide });
+      textureLoader.load(url, (tex) => {
         tex.minFilter = THREE.LinearFilter;
         mat.map = tex;
         mat.needsUpdate = true;
         gsap.to(mat, { opacity: 0.85, duration: 1 });
-        });
-        const m = new THREE.Mesh(geom, mat);
-        m.position.copy(pos);
-        m.rotation.copy(rot);
-        m.name = "slab_image";
-        group.add(m);
+      });
+      const m = new THREE.Mesh(geom, mat);
+      m.position.copy(pos);
+      m.rotation.copy(rot);
+      m.name = "slab_image";
+      group.add(m);
     };
-
-    // Logic: Iterate slots, but skip if the previous slot was filled.
-    // Threshold adjusted to 0.80 (20%) to compensate for skipped slots and maintain density.
 
     // Floor
     let lastFloorIdx = -999;
     for (let i = 0; i < FLOOR_COLS; i++) {
-        // Must be at least 2 slots away from last image to avoid adjacency (i > last + 1)
-        if (i > lastFloorIdx + 1) {
-            if (Math.random() > 0.80) {
-                addImg(new THREE.Vector3(-w + i*COL_WIDTH + COL_WIDTH/2, -h, -d/2), new THREE.Euler(-Math.PI/2,0,0), COL_WIDTH, d);
-                lastFloorIdx = i;
-            }
+      if (i > lastFloorIdx + 1) {
+        if (Math.random() > 0.80) {
+          addImg(new THREE.Vector3(-w + i*COL_WIDTH + COL_WIDTH/2, -h, -d/2), new THREE.Euler(-Math.PI/2,0,0), COL_WIDTH, d);
+          lastFloorIdx = i;
         }
+      }
     }
     
     // Ceiling
     let lastCeilIdx = -999;
     for (let i = 0; i < FLOOR_COLS; i++) {
-        if (i > lastCeilIdx + 1) {
-            if (Math.random() > 0.88) { // Keep ceiling sparser
-                addImg(new THREE.Vector3(-w + i*COL_WIDTH + COL_WIDTH/2, h, -d/2), new THREE.Euler(Math.PI/2,0,0), COL_WIDTH, d);
-                lastCeilIdx = i;
-            }
+      if (i > lastCeilIdx + 1) {
+        if (Math.random() > 0.88) {
+          addImg(new THREE.Vector3(-w + i*COL_WIDTH + COL_WIDTH/2, h, -d/2), new THREE.Euler(Math.PI/2,0,0), COL_WIDTH, d);
+          lastCeilIdx = i;
         }
+      }
     }
     
     // Left Wall
     let lastLeftIdx = -999;
     for (let i = 0; i < WALL_ROWS; i++) {
-        if (i > lastLeftIdx + 1) {
-            if (Math.random() > 0.80) {
-                addImg(new THREE.Vector3(-w, -h + i*ROW_HEIGHT + ROW_HEIGHT/2, -d/2), new THREE.Euler(0,Math.PI/2,0), d, ROW_HEIGHT);
-                lastLeftIdx = i;
-            }
+      if (i > lastLeftIdx + 1) {
+        if (Math.random() > 0.80) {
+          addImg(new THREE.Vector3(-w, -h + i*ROW_HEIGHT + ROW_HEIGHT/2, -d/2), new THREE.Euler(0,Math.PI/2,0), d, ROW_HEIGHT);
+          lastLeftIdx = i;
         }
+      }
     }
     
     // Right Wall
     let lastRightIdx = -999;
     for (let i = 0; i < WALL_ROWS; i++) {
-        if (i > lastRightIdx + 1) {
-            if (Math.random() > 0.80) {
-                addImg(new THREE.Vector3(w, -h + i*ROW_HEIGHT + ROW_HEIGHT/2, -d/2), new THREE.Euler(0,-Math.PI/2,0), d, ROW_HEIGHT);
-                lastRightIdx = i;
-            }
+      if (i > lastRightIdx + 1) {
+        if (Math.random() > 0.80) {
+          addImg(new THREE.Vector3(w, -h + i*ROW_HEIGHT + ROW_HEIGHT/2, -d/2), new THREE.Euler(0,-Math.PI/2,0), d, ROW_HEIGHT);
+          lastRightIdx = i;
         }
+      }
     }
-  }
+  };
+
+  // Wheel handler for scroll-locking
+  const handleWheel = useCallback((e: WheelEvent) => {
+    const heroRect = containerRef.current?.getBoundingClientRect();
+    if (!heroRect) return;
+
+    const isInHeroView = heroRect.top <= 0 && heroRect.bottom > 0;
+    
+    // If scrolling down and tunnel not complete and we're in hero view
+    if (e.deltaY > 0 && !tunnelComplete && isInHeroView) {
+      e.preventDefault();
+      virtualScrollRef.current = Math.min(
+        virtualScrollRef.current + e.deltaY * SCROLL_SPEED,
+        SCROLL_NEEDED
+      );
+      
+      // Check if tunnel is complete
+      if (virtualScrollRef.current >= SCROLL_NEEDED) {
+        setTunnelComplete(true);
+      }
+    }
+    // If scrolling up and we're at top of page (came back from next section)
+    else if (e.deltaY < 0 && window.scrollY <= 1 && tunnelComplete) {
+      e.preventDefault();
+      setTunnelComplete(false);
+      virtualScrollRef.current = SCROLL_NEEDED - 10; // Start from near end
+    }
+    // If scrolling up and tunnel was in progress
+    else if (e.deltaY < 0 && !tunnelComplete && isInHeroView && virtualScrollRef.current > 0) {
+      e.preventDefault();
+      virtualScrollRef.current = Math.max(
+        virtualScrollRef.current + e.deltaY * SCROLL_SPEED,
+        0
+      );
+    }
+  }, [tunnelComplete, SCROLL_NEEDED, SCROLL_SPEED]);
 
   // --- INITIAL SETUP ---
   useEffect(() => {
@@ -212,18 +235,15 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
 
     // Animation Loop
     let frameId: number;
-    const tunnelLength = NUM_SEGMENTS * SEGMENT_DEPTH;
-    // Camera should stop just before the last segment ends (leave some margin)
-    const maxCameraZ = -(tunnelLength - SEGMENT_DEPTH * 2);
     
     const animate = () => {
       frameId = requestAnimationFrame(animate);
       if (!cameraRef.current || !sceneRef.current || !rendererRef.current) return;
 
-      // Calculate target Z and clamp it within bounds
-      const rawTargetZ = -scrollPosRef.current * 0.05;
-      const targetZ = Math.max(rawTargetZ, maxCameraZ); // Clamp to not go beyond tunnel end
-      const clampedTargetZ = Math.min(targetZ, 0); // Clamp to not go backwards past start
+      // Calculate target Z from virtual scroll
+      const rawTargetZ = -virtualScrollRef.current * 0.05;
+      const targetZ = Math.max(rawTargetZ, MAX_CAM_Z);
+      const clampedTargetZ = Math.min(targetZ, 0);
       
       const currentZ = cameraRef.current.position.z;
       cameraRef.current.position.z += (clampedTargetZ - currentZ) * 0.1;
@@ -232,8 +252,6 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
     };
     animate();
 
-    const onScroll = () => { scrollPosRef.current = window.scrollY; };
-    window.addEventListener('scroll', onScroll);
     const handleResize = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
@@ -244,42 +262,43 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
     window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(frameId);
       renderer.dispose();
     };
-  }, []); // Run once on mount
+  }, []);
+
+  // Wheel event listener
+  useEffect(() => {
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+    };
+  }, [handleWheel]);
 
   // --- THEME UPDATE EFFECT ---
   useEffect(() => {
     if (!sceneRef.current) return;
 
-    // Define theme colors
     const bgHex = isDarkMode ? 0x050505 : 0xffffff;
     const fogHex = isDarkMode ? 0x050505 : 0xffffff; 
-    
-    // Light mode: Light Grey lines (0xb0b0b0), higher opacity
-    // Dark mode: Medium Grey lines (0x555555) for visibility, slightly adjusted opacity
     const lineHex = isDarkMode ? 0x555555 : 0xb0b0b0;
     const lineOp = isDarkMode ? 0.35 : 0.5;
 
-    // Apply to scene
     sceneRef.current.background = new THREE.Color(bgHex);
     if (sceneRef.current.fog) {
-        (sceneRef.current.fog as THREE.FogExp2).color.setHex(fogHex);
+      (sceneRef.current.fog as THREE.FogExp2).color.setHex(fogHex);
     }
 
-    // Apply to existing grid lines
     segmentsRef.current.forEach(segment => {
-        segment.children.forEach(child => {
-            if (child instanceof THREE.LineSegments) {
-                const mat = child.material as THREE.LineBasicMaterial;
-                mat.color.setHex(lineHex);
-                mat.opacity = lineOp;
-                mat.needsUpdate = true;
-            }
-        });
+      segment.children.forEach(child => {
+        if (child instanceof THREE.LineSegments) {
+          const mat = child.material as THREE.LineBasicMaterial;
+          mat.color.setHex(lineHex);
+          mat.opacity = lineOp;
+          mat.needsUpdate = true;
+        }
+      });
     });
   }, [isDarkMode]);
 
@@ -294,18 +313,12 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
     return () => ctx.revert();
   }, []);
 
-  // Calculate scroll height based on tunnel length
-  // scrollPosRef * 0.05 = camera Z, so to reach maxCameraZ we need scroll = tunnelLength * 0.05 * 20 = tunnelLength pixels approx
-  const scrollHeight = (NUM_SEGMENTS * SEGMENT_DEPTH) * 25; // ~2100px for 14 segments * 6 depth
-
   return (
-    <div ref={containerRef} className={`relative w-full transition-colors duration-700 ${isDarkMode ? 'bg-[#050505]' : 'bg-white'}`} style={{ height: `calc(100vh + ${scrollHeight}px)` }}>
-      <div className="fixed inset-0 w-full h-full overflow-hidden z-0">
-        <canvas ref={canvasRef} className="w-full h-full block" />
-      </div>
-
-      <div className="fixed inset-0 z-10 flex items-center justify-center pointer-events-none">
-        <div ref={contentRef} className="text-center flex flex-col items-center max-w-3xl px-6 pointer-events-auto mix-blend-multiply-normal"> 
+    <div ref={containerRef} className={`relative w-full h-screen transition-colors duration-700 ${isDarkMode ? 'bg-[#050505]' : 'bg-white'}`}>
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block z-0" />
+      
+      <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+        <div ref={contentRef} className="text-center flex flex-col items-center max-w-3xl px-6 pointer-events-auto"> 
           
           <h1 className={`text-[5rem] md:text-[7rem] lg:text-[8rem] leading-[0.85] font-bold tracking-tighter mb-8 transition-colors duration-500 ${isDarkMode ? 'text-white' : 'text-dark'}`}>
             Clone yourself.
