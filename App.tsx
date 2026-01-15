@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
+import MetaScroll from './components/MetaScroll';
 import TechLab from './components/TechLab';
 import Services from './components/Services';
 import Founders from './components/Founders';
@@ -20,8 +21,9 @@ const App: React.FC = () => {
       <Navigation />
       <main>
         <Hero />
+        <MetaScroll />
         <TechLab />
-        <Services />
+        {/* <Services /> */}
         <Founders />
       </main>
     </div>
