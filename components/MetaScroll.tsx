@@ -17,28 +17,28 @@ const lifecycleStages: LifecycleStage[] = [
         name: "DISCOVERY",
         title: "Smart Analyzing",
         description: "Identify AI solutions to streamline workflows and improve efficiency.",
-        position: { x: 20, y: 15 },
+        position: { x: 0, y: 15 },
     },
     {
         id: 2,
         name: "DEVELOPMENT",
         title: "AI Development",
         description: "Build intelligent automation systems tailored to your business.",
-        position: { x: 75, y: 15 },
+        position: { x: 55, y: 15 },
     },
     {
         id: 3,
         name: "INTEGRATION",
         title: "Seamless Integration",
         description: "Integrate AI with minimal disruption to your infrastructure.",
-        position: { x: 20, y: 85 },
+        position: { x: 0, y: 60 },
     },
     {
         id: 4,
         name: "OPTIMIZATION",
         title: "Optimization",
         description: "Refine performance and enhance automation for growth.",
-        position: { x: 75, y: 85 },
+        position: { x: 55, y: 60 },
     }
 ];
 
