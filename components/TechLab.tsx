@@ -184,14 +184,17 @@ const TechLab = () => {
           </AnimatePresence>
 
           {/* CTA */}
-          <motion.button
+          <motion.a
+            href="https://wa.me/919136239673?text=Hey%20I%20want%20to%20automate%20my%20workflow"
+            target="_blank"
+            rel="noopener noreferrer"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
-            className="mt-12 px-8 py-4 bg-gradient-to-r from-purple-600 to-violet-600 text-white font-semibold text-base sm:text-lg rounded-full hover:from-purple-500 hover:to-violet-500 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25"
+            className="mt-12 inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-violet-600 text-white font-semibold text-base sm:text-lg rounded-full hover:from-purple-500 hover:to-violet-500 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25"
           >
             Get Started →
-          </motion.button>
+          </motion.a>
         </div>
       </div>
     </section>

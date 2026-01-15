@@ -26,9 +26,14 @@ const Navigation: React.FC = () => {
 
       {/* CTA */}
       <div className="ml-2">
-        <button className="px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-1 group bg-gradient-to-r from-purple-600 to-violet-600 text-white hover:from-purple-500 hover:to-violet-500 hover:shadow-lg hover:shadow-purple-500/25">
+        <a
+          href="https://wa.me/919136239673?text=Hey%20I%20want%20to%20automate%20my%20workflow"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-1 group bg-gradient-to-r from-purple-600 to-violet-600 text-white hover:from-purple-500 hover:to-violet-500 hover:shadow-lg hover:shadow-purple-500/25"
+        >
           Get started
-        </button>
+        </a>
       </div>
     </nav>
   );

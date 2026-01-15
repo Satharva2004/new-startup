@@ -317,9 +317,14 @@ const Hero: React.FC = () => {
           </p>
 
           <div className="flex items-center gap-6">
-            <button className="rounded-full px-8 py-3.5 text-sm font-medium hover:scale-105 transition-all duration-300 bg-gradient-to-r from-purple-600 to-violet-600 text-white hover:from-purple-500 hover:to-violet-500 hover:shadow-lg hover:shadow-purple-500/25">
+            <a
+              href="https://wa.me/919136239673?text=Hey%20I%20want%20to%20automate%20my%20workflow"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full px-8 py-3.5 text-sm font-medium hover:scale-105 transition-all duration-300 bg-gradient-to-r from-purple-600 to-violet-600 text-white hover:from-purple-500 hover:to-violet-500 hover:shadow-lg hover:shadow-purple-500/25"
+            >
               Start Automating
-            </button>
+            </a>
             <button className="text-sm font-medium hover:opacity-70 transition-opacity flex items-center gap-1 text-white">
               View Services <span>→</span>
             </button>

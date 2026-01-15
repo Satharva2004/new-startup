@@ -133,7 +133,12 @@ const Footer = () => {
                         <ul className="space-y-3">
                             {['About', 'Careers', 'Press', 'Contact'].map((item) => (
                                 <li key={item}>
-                                    <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
+                                    <a
+                                        href={item === 'Contact' ? "https://wa.me/919136239673?text=Hey%20I%20want%20to%20automate%20my%20workflow" : "#"}
+                                        target={item === 'Contact' ? "_blank" : undefined}
+                                        rel={item === 'Contact' ? "noopener noreferrer" : undefined}
+                                        className="text-gray-400 hover:text-white transition-colors text-sm"
+                                    >
                                         {item}
                                     </a>
                                 </li>
