@@ -1,14 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 
-interface TechLabProps {
-  isDarkMode: boolean;
-}
-
-const TechLab: React.FC<TechLabProps> = ({ isDarkMode }) => {
+const TechLab: React.FC = () => {
   const actionWords = ['Automate', 'Build', 'Deploy'];
   const targetWords = ['CRM', 'Dashboard', 'Workflow'];
-  
+
   // 9 unique content descriptions for each action + target combination
   const contentMap: Record<string, string> = {
     'Automate-CRM': 'Let your clone handle customer relationships, follow-ups, and lead nurturing 24/7.',
@@ -21,17 +17,17 @@ const TechLab: React.FC<TechLabProps> = ({ isDarkMode }) => {
     'Deploy-Dashboard': 'Go live with real-time analytics that your clone keeps updated for you.',
     'Deploy-Workflow': 'Ship automated workflows that scale your expertise across your organization.',
   };
-  
+
   const [actionIndex, setActionIndex] = useState(0);
   const [targetIndex, setTargetIndex] = useState(0);
-  
+
   const actionRef = useRef<HTMLSpanElement>(null);
   const targetRef = useRef<HTMLSpanElement>(null);
   const contentRef = useRef<HTMLParagraphElement>(null);
-  
+
   // Track current position in nested loop
   const targetCountRef = useRef(0);
-  
+
   // Get current content based on combination
   const currentContent = contentMap[`${actionWords[actionIndex]}-${targetWords[targetIndex]}`];
 
@@ -44,7 +40,7 @@ const TechLab: React.FC<TechLabProps> = ({ isDarkMode }) => {
         duration: 0.2,
         ease: 'power2.in',
       });
-      
+
       gsap.to(targetRef.current, {
         y: -20,
         opacity: 0,
@@ -54,7 +50,7 @@ const TechLab: React.FC<TechLabProps> = ({ isDarkMode }) => {
           // Increment target counter
           targetCountRef.current += 1;
           const nextTargetIndex = targetCountRef.current % targetWords.length;
-          
+
           // If we've completed a full cycle of targets (back to 0), change action
           if (nextTargetIndex === 0) {
             // Animate action word change
@@ -72,13 +68,13 @@ const TechLab: React.FC<TechLabProps> = ({ isDarkMode }) => {
               }
             });
           }
-          
+
           setTargetIndex(nextTargetIndex);
           gsap.fromTo(targetRef.current,
             { y: 20, opacity: 0 },
             { y: 0, opacity: 1, duration: 0.3, ease: 'power2.out' }
           );
-          
+
           // Animate content in after target changes
           gsap.fromTo(contentRef.current,
             { opacity: 0, y: 10 },
@@ -97,28 +93,28 @@ const TechLab: React.FC<TechLabProps> = ({ isDarkMode }) => {
   }, []);
 
   return (
-    <section className={`relative min-h-screen flex items-center justify-center transition-colors duration-700 ${isDarkMode ? 'bg-[#050505]' : 'bg-white'}`}>
+    <section className="relative min-h-screen flex items-center justify-center bg-[#050505]">
       <div className="text-center px-6 max-w-4xl">
-        <h2 className={`text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight transition-colors duration-500 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white">
           <span>Hey John, </span>
-          <span 
+          <span
             ref={actionRef}
-            className={`inline-block px-4 py-1 mx-1 rounded-lg ${isDarkMode ? 'bg-white/10 text-orange-400' : 'bg-slate-100 text-orange-600'}`}
+            className="inline-block px-4 py-1 mx-1 rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/30"
           >
             {actionWords[actionIndex]}
           </span>
           <span> my </span>
-          <span 
+          <span
             ref={targetRef}
-            className={`inline-block px-4 py-1 mx-1 rounded-lg ${isDarkMode ? 'bg-white/10 text-orange-400' : 'bg-slate-100 text-orange-600'}`}
+            className="inline-block px-4 py-1 mx-1 rounded-lg bg-violet-500/20 text-violet-400 border border-violet-500/30"
           >
             {targetWords[targetIndex]}
           </span>
         </h2>
-        
-        <p 
+
+        <p
           ref={contentRef}
-          className={`mt-8 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed transition-colors duration-500 ${isDarkMode ? 'text-gray-400' : 'text-slate-600'}`}
+          className="mt-8 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-gray-400"
         >
           {currentContent}
         </p>

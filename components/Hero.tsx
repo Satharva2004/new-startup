@@ -2,21 +2,17 @@ import React, { useRef, useLayoutEffect, useEffect, useState, useCallback } from
 import gsap from 'gsap';
 import * as THREE from 'three';
 
-interface HeroProps {
-  isDarkMode: boolean;
-}
-
-const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
+const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  
+
   // Store refs for cleanup and animation
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const segmentsRef = useRef<THREE.Group[]>([]);
-  
+
   // Virtual scroll position for tunnel animation (not actual page scroll)
   const virtualScrollRef = useRef(0);
   const [tunnelComplete, setTunnelComplete] = useState(false);
@@ -25,7 +21,7 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
   const TUNNEL_WIDTH = 24;
   const TUNNEL_HEIGHT = 16;
   const SEGMENT_DEPTH = 6;
-  const NUM_SEGMENTS = 14; 
+  const NUM_SEGMENTS = 14;
   const SCROLL_SPEED = 1.5; // Multiplier for wheel delta
 
   // Grid Divisions
@@ -40,22 +36,35 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
   const MAX_CAM_Z = -(NUM_SEGMENTS * SEGMENT_DEPTH - SEGMENT_DEPTH * 2); // -72
   const SCROLL_NEEDED = Math.abs(MAX_CAM_Z) / 0.05; // Virtual scroll needed to complete tunnel
 
-  // Unsplash images
+  // Local images from img folder (repeated to match 14 images)
   const imageUrls = [
-    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&fit=crop",
-    "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=600&fit=crop",
-    "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600&fit=crop",
-    "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&fit=crop",
-    "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&fit=crop",
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&fit=crop",
-    "https://images.unsplash.com/photo-1488161628813-99c974c76949?q=80&w=600&fit=crop",
-    "https://images.unsplash.com/photo-1521119989659-a83eee488058?q=80&w=600&fit=crop",
-    "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&fit=crop",
-    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&fit=crop",
-    "https://images.unsplash.com/photo-1664575602276-acd073f104c1?q=80&w=600&fit=crop",
-    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&fit=crop",
-    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&fit=crop",
-    "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=600&fit=crop",
+    "/img/n8n3.png",
+    "/img/dashboard1.jpg",
+    "/img/n8n4.png",
+    "/img/n8n5.png",
+    "/img/dashboard2.png",
+    "/img/n8n2.png",
+    "/img/dashboard3.png",
+    "/img/n8n5.png",
+    "/img/dashboard4.png",
+    "/img/n8n4.png",
+    "/img/n8n1.png",
+    "/img/n8n2.png",
+    "/img/dashboard3.png",
+    "/img/n8n3.png",
+    "/img/dashboard2.png",
+    "/img/n8n4.png",
+    "/img/n8n5.png",
+    "/img/n8n6.png",
+    "/img/dashboard4.png",
+    "/img/n8n7.png",
+    "/img/dashboard1.jpg",
+    "/img/n8n1.png",
+    "/img/dashboard2.png",
+    "/img/n8n7.png",
+    "/img/dashboard3.png",
+    "/img/n8n4.png",
+    "/img/n8n6.png",
   ];
 
   // Helper: Create a segment with grid lines and filled cells
@@ -67,7 +76,8 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
     const h = TUNNEL_HEIGHT / 2;
     const d = SEGMENT_DEPTH;
 
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0xb0b0b0, transparent: true, opacity: 0.5 });
+    // Purple-tinted grid lines for dark theme
+    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x7c3aed, transparent: true, opacity: 0.4 });
     const lineGeo = new THREE.BufferGeometry();
     const vertices: number[] = [];
 
@@ -123,40 +133,40 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
     for (let i = 0; i < FLOOR_COLS; i++) {
       if (i > lastFloorIdx + 1) {
         if (Math.random() > 0.80) {
-          addImg(new THREE.Vector3(-w + i*COL_WIDTH + COL_WIDTH/2, -h, -d/2), new THREE.Euler(-Math.PI/2,0,0), COL_WIDTH, d);
+          addImg(new THREE.Vector3(-w + i * COL_WIDTH + COL_WIDTH / 2, -h, -d / 2), new THREE.Euler(-Math.PI / 2, 0, 0), COL_WIDTH, d);
           lastFloorIdx = i;
         }
       }
     }
-    
+
     // Ceiling
     let lastCeilIdx = -999;
     for (let i = 0; i < FLOOR_COLS; i++) {
       if (i > lastCeilIdx + 1) {
         if (Math.random() > 0.88) {
-          addImg(new THREE.Vector3(-w + i*COL_WIDTH + COL_WIDTH/2, h, -d/2), new THREE.Euler(Math.PI/2,0,0), COL_WIDTH, d);
+          addImg(new THREE.Vector3(-w + i * COL_WIDTH + COL_WIDTH / 2, h, -d / 2), new THREE.Euler(Math.PI / 2, 0, 0), COL_WIDTH, d);
           lastCeilIdx = i;
         }
       }
     }
-    
+
     // Left Wall
     let lastLeftIdx = -999;
     for (let i = 0; i < WALL_ROWS; i++) {
       if (i > lastLeftIdx + 1) {
         if (Math.random() > 0.80) {
-          addImg(new THREE.Vector3(-w, -h + i*ROW_HEIGHT + ROW_HEIGHT/2, -d/2), new THREE.Euler(0,Math.PI/2,0), d, ROW_HEIGHT);
+          addImg(new THREE.Vector3(-w, -h + i * ROW_HEIGHT + ROW_HEIGHT / 2, -d / 2), new THREE.Euler(0, Math.PI / 2, 0), d, ROW_HEIGHT);
           lastLeftIdx = i;
         }
       }
     }
-    
+
     // Right Wall
     let lastRightIdx = -999;
     for (let i = 0; i < WALL_ROWS; i++) {
       if (i > lastRightIdx + 1) {
         if (Math.random() > 0.80) {
-          addImg(new THREE.Vector3(w, -h + i*ROW_HEIGHT + ROW_HEIGHT/2, -d/2), new THREE.Euler(0,-Math.PI/2,0), d, ROW_HEIGHT);
+          addImg(new THREE.Vector3(w, -h + i * ROW_HEIGHT + ROW_HEIGHT / 2, -d / 2), new THREE.Euler(0, -Math.PI / 2, 0), d, ROW_HEIGHT);
           lastRightIdx = i;
         }
       }
@@ -169,7 +179,7 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
     if (!heroRect) return;
 
     const isInHeroView = heroRect.top <= 0 && heroRect.bottom > 0;
-    
+
     // If scrolling down and tunnel not complete and we're in hero view
     if (e.deltaY > 0 && !tunnelComplete && isInHeroView) {
       e.preventDefault();
@@ -177,7 +187,7 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
         virtualScrollRef.current + e.deltaY * SCROLL_SPEED,
         SCROLL_NEEDED
       );
-      
+
       // Check if tunnel is complete
       if (virtualScrollRef.current >= SCROLL_NEEDED) {
         setTunnelComplete(true);
@@ -205,16 +215,17 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
 
     // THREE JS SETUP
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x050505);
     sceneRef.current = scene;
 
     const width = window.innerWidth;
     const height = window.innerHeight;
     const camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 1000);
-    camera.position.set(0, 0, 0); 
+    camera.position.set(0, 0, 0);
     cameraRef.current = camera;
 
-    const renderer = new THREE.WebGLRenderer({ 
-      canvas: canvasRef.current, 
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvasRef.current,
       antialias: true,
       alpha: false,
       powerPreference: "high-performance"
@@ -235,7 +246,7 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
 
     // Animation Loop
     let frameId: number;
-    
+
     const animate = () => {
       frameId = requestAnimationFrame(animate);
       if (!cameraRef.current || !sceneRef.current || !rendererRef.current) return;
@@ -244,7 +255,7 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
       const rawTargetZ = -virtualScrollRef.current * 0.05;
       const targetZ = Math.max(rawTargetZ, MAX_CAM_Z);
       const clampedTargetZ = Math.min(targetZ, 0);
-      
+
       const currentZ = cameraRef.current.position.z;
       cameraRef.current.position.z += (clampedTargetZ - currentZ) * 0.1;
 
@@ -276,36 +287,10 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
     };
   }, [handleWheel]);
 
-  // --- THEME UPDATE EFFECT ---
-  useEffect(() => {
-    if (!sceneRef.current) return;
-
-    const bgHex = isDarkMode ? 0x050505 : 0xffffff;
-    const fogHex = isDarkMode ? 0x050505 : 0xffffff; 
-    const lineHex = isDarkMode ? 0x555555 : 0xb0b0b0;
-    const lineOp = isDarkMode ? 0.35 : 0.5;
-
-    sceneRef.current.background = new THREE.Color(bgHex);
-    if (sceneRef.current.fog) {
-      (sceneRef.current.fog as THREE.FogExp2).color.setHex(fogHex);
-    }
-
-    segmentsRef.current.forEach(segment => {
-      segment.children.forEach(child => {
-        if (child instanceof THREE.LineSegments) {
-          const mat = child.material as THREE.LineBasicMaterial;
-          mat.color.setHex(lineHex);
-          mat.opacity = lineOp;
-          mat.needsUpdate = true;
-        }
-      });
-    });
-  }, [isDarkMode]);
-
   // Text Entrance Animation
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(contentRef.current, 
+      gsap.fromTo(contentRef.current,
         { opacity: 0, y: 30, scale: 0.95 },
         { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: "power3.out", delay: 0.5 }
       );
@@ -314,25 +299,25 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
   }, []);
 
   return (
-    <div ref={containerRef} className={`relative w-full h-screen transition-colors duration-700 ${isDarkMode ? 'bg-[#050505]' : 'bg-white'}`}>
+    <div ref={containerRef} className="relative w-full h-screen bg-[#050505]">
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block z-0" />
-      
+
       <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-        <div ref={contentRef} className="text-center flex flex-col items-center max-w-3xl px-6 pointer-events-auto"> 
-          
-          <h1 className={`text-[5rem] md:text-[7rem] lg:text-[8rem] leading-[0.85] font-bold tracking-tighter mb-8 transition-colors duration-500 ${isDarkMode ? 'text-white' : 'text-dark'}`}>
+        <div ref={contentRef} className="text-center flex flex-col items-center max-w-3xl px-6 pointer-events-auto">
+
+          <h1 className="text-[5rem] md:text-[7rem] lg:text-[8rem] leading-[0.85] font-bold tracking-tighter mb-8 text-white">
             Clone yourself.
           </h1>
-          
-          <p className={`text-lg md:text-xl font-normal max-w-lg leading-relaxed mb-10 transition-colors duration-500 ${isDarkMode ? 'text-gray-400' : 'text-muted'}`}>
-            Build the digital version of you to scale your expertise and availability, <span className="text-accent font-medium">infinitely</span>
+
+          <p className="text-lg md:text-xl font-normal max-w-lg leading-relaxed mb-10 text-gray-400">
+            Build the digital version of you to scale your expertise and availability, <span className="text-purple-400 font-medium">infinitely</span>
           </p>
 
           <div className="flex items-center gap-6">
-            <button className={`rounded-full px-8 py-3.5 text-sm font-medium hover:scale-105 transition-all duration-300 ${isDarkMode ? 'bg-white text-black hover:bg-gray-200' : 'bg-dark text-white'}`}>
+            <button className="rounded-full px-8 py-3.5 text-sm font-medium hover:scale-105 transition-all duration-300 bg-gradient-to-r from-purple-600 to-violet-600 text-white hover:from-purple-500 hover:to-violet-500 hover:shadow-lg hover:shadow-purple-500/25">
               Try now
             </button>
-            <button className={`text-sm font-medium hover:opacity-70 transition-opacity flex items-center gap-1 ${isDarkMode ? 'text-white' : 'text-dark'}`}>
+            <button className="text-sm font-medium hover:opacity-70 transition-opacity flex items-center gap-1 text-white">
               See examples <span>→</span>
             </button>
           </div>
