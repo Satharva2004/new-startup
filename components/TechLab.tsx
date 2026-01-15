@@ -1,123 +1,198 @@
-import React, { useRef, useEffect, useState } from 'react';
-import gsap from 'gsap';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const TechLab: React.FC = () => {
-  const actionWords = ['Automate', 'Build', 'Deploy'];
-  const targetWords = ['CRM', 'Dashboard', 'Workflow'];
+const verbs = ["Build", "Automate"];
+const nouns = ["Dashboard", "Workflow"];
 
-  // 9 unique content descriptions for each action + target combination
-  const contentMap: Record<string, string> = {
-    'Automate-CRM': 'Let your clone handle customer relationships, follow-ups, and lead nurturing 24/7.',
-    'Automate-Dashboard': 'Your clone monitors metrics, generates reports, and alerts you to what matters.',
-    'Automate-Workflow': 'Streamline repetitive tasks and let your clone manage the entire process flow.',
-    'Build-CRM': 'Create a personalized customer management system that thinks like you do.',
-    'Build-Dashboard': 'Design intelligent dashboards that surface insights the way you would.',
-    'Build-Workflow': 'Craft custom workflows that mirror your decision-making process.',
-    'Deploy-CRM': 'Launch your AI-powered CRM assistant to start engaging customers instantly.',
-    'Deploy-Dashboard': 'Go live with real-time analytics that your clone keeps updated for you.',
-    'Deploy-Workflow': 'Ship automated workflows that scale your expertise across your organization.',
+const contentMap: Record<string, { title: string; description: string; features: string[] }> = {
+  "Build-Dashboard": {
+    title: "Design intelligent dashboards",
+    description: "Create dashboards that surface insights the way you would. Real-time data visualization that thinks like you.",
+    features: ["Real-time analytics", "Custom widgets", "AI-powered insights"]
+  },
+  "Build-Workflow": {
+    title: "Craft custom workflows",
+    description: "Design workflows that mirror your decision-making process. Automate without losing the human touch.",
+    features: ["Visual workflow builder", "Conditional logic", "Integration ready"]
+  },
+  "Automate-Dashboard": {
+    title: "Automated reporting & monitoring",
+    description: "Your clone monitors metrics, generates reports, and alerts you to what matters most.",
+    features: ["Scheduled reports", "Smart alerts", "Trend detection"]
+  },
+  "Automate-Workflow": {
+    title: "Streamlined process automation",
+    description: "Streamline repetitive tasks and let your clone manage the entire process flow.",
+    features: ["Task automation", "Process optimization", "Error handling"]
+  }
+};
+
+const getContent = (verb: string, noun: string) => {
+  const key = `${verb}-${noun}`;
+  return contentMap[key] || {
+    title: `${verb} your ${noun}`,
+    description: `Powerful tools to ${verb.toLowerCase()} your ${noun.toLowerCase()} efficiently`,
+    features: ["AI-powered", "Easy to use", "Fast results"]
   };
+};
 
-  const [actionIndex, setActionIndex] = useState(0);
-  const [targetIndex, setTargetIndex] = useState(0);
-
-  const actionRef = useRef<HTMLSpanElement>(null);
-  const targetRef = useRef<HTMLSpanElement>(null);
-  const contentRef = useRef<HTMLParagraphElement>(null);
-
-  // Track current position in nested loop
-  const targetCountRef = useRef(0);
-
-  // Get current content based on combination
-  const currentContent = contentMap[`${actionWords[actionIndex]}-${targetWords[targetIndex]}`];
-
-  useEffect(() => {
-    const animateTarget = () => {
-      // Animate content out first
-      gsap.to(contentRef.current, {
-        opacity: 0,
-        y: 10,
-        duration: 0.2,
-        ease: 'power2.in',
-      });
-
-      gsap.to(targetRef.current, {
-        y: -20,
-        opacity: 0,
-        duration: 0.3,
-        ease: 'power2.in',
-        onComplete: () => {
-          // Increment target counter
-          targetCountRef.current += 1;
-          const nextTargetIndex = targetCountRef.current % targetWords.length;
-
-          // If we've completed a full cycle of targets (back to 0), change action
-          if (nextTargetIndex === 0) {
-            // Animate action word change
-            gsap.to(actionRef.current, {
-              y: -20,
-              opacity: 0,
-              duration: 0.3,
-              ease: 'power2.in',
-              onComplete: () => {
-                setActionIndex((prev) => (prev + 1) % actionWords.length);
-                gsap.fromTo(actionRef.current,
-                  { y: 20, opacity: 0 },
-                  { y: 0, opacity: 1, duration: 0.3, ease: 'power2.out' }
-                );
-              }
-            });
-          }
-
-          setTargetIndex(nextTargetIndex);
-          gsap.fromTo(targetRef.current,
-            { y: 20, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.3, ease: 'power2.out' }
-          );
-
-          // Animate content in after target changes
-          gsap.fromTo(contentRef.current,
-            { opacity: 0, y: 10 },
-            { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out', delay: 0.1 }
-          );
-        }
-      });
-    };
-
-    // Animate target every 2 seconds (slightly longer to read content)
-    const targetInterval = setInterval(animateTarget, 2000);
-
-    return () => {
-      clearInterval(targetInterval);
-    };
-  }, []);
+// Clean flip word - no boxes, just the text with prev/next submerged
+const FlipWord = ({
+  words,
+  currentIndex,
+  colorClass
+}: {
+  words: string[];
+  currentIndex: number;
+  colorClass: string;
+}) => {
+  const prevIndex = (currentIndex - 1 + words.length) % words.length;
+  const nextIndex = (currentIndex + 1) % words.length;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-[#050505]">
-      <div className="text-center px-6 max-w-4xl">
-        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white">
-          <span>Hey John, </span>
-          <span
-            ref={actionRef}
-            className="inline-block px-4 py-1 mx-1 rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/30"
-          >
-            {actionWords[actionIndex]}
-          </span>
-          <span> my </span>
-          <span
-            ref={targetRef}
-            className="inline-block px-4 py-1 mx-1 rounded-lg bg-violet-500/20 text-violet-400 border border-violet-500/30"
-          >
-            {targetWords[targetIndex]}
-          </span>
-        </h2>
-
-        <p
-          ref={contentRef}
-          className="mt-8 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-gray-400"
+    <span className="relative inline-flex flex-col items-center justify-center h-[90px] sm:h-[100px]">
+      {/* Previous word - transparent, submerging at top */}
+      <AnimatePresence mode="popLayout">
+        <motion.span
+          key={`prev-${prevIndex}`}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 0.2, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute -top-6 text-xs sm:text-sm text-gray-500 font-medium"
         >
-          {currentContent}
-        </p>
+          {words[prevIndex]}
+        </motion.span>
+      </AnimatePresence>
+
+      {/* Current word - 100% visible, big and bold */}
+      <AnimatePresence mode="popLayout">
+        <motion.span
+          key={`current-${currentIndex}`}
+          initial={{ opacity: 0, y: 25, scale: 0.85 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -25, scale: 0.85 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className={`text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold ${colorClass}`}
+        >
+          {words[currentIndex]}
+        </motion.span>
+      </AnimatePresence>
+
+      {/* Next word - transparent, submerging at bottom */}
+      <AnimatePresence mode="popLayout">
+        <motion.span
+          key={`next-${nextIndex}`}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 0.2, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute -bottom-6 text-xs sm:text-sm text-gray-500 font-medium"
+        >
+          {words[nextIndex]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+};
+
+const TechLab = () => {
+  const [verbIndex, setVerbIndex] = useState(0);
+  const [nounIndex, setNounIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNounIndex((prev) => {
+        const next = (prev + 1) % nouns.length;
+        if (next === 0) {
+          setVerbIndex((prevVerb) => (prevVerb + 1) % verbs.length);
+        }
+        return next;
+      });
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const content = getContent(verbs[verbIndex], nouns[nounIndex]);
+
+  return (
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#050505] py-16 sm:py-20">
+      {/* Subtle background glow */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[150px]" />
+        <div className="absolute bottom-1/3 right-1/4 w-[300px] h-[300px] bg-violet-500/8 rounded-full blur-[120px]" />
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+        <div className="max-w-5xl mx-auto text-center">
+          {/* Flip Text Heading - Clean, no boxes */}
+          <div className="flex items-center justify-center gap-2 sm:gap-4 flex-wrap mb-16">
+            <span className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
+              Hey Vellum,
+            </span>
+
+            <FlipWord
+              words={verbs}
+              currentIndex={verbIndex}
+              colorClass="text-purple-400"
+            />
+
+            <span className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
+              my
+            </span>
+
+            <FlipWord
+              words={nouns}
+              currentIndex={nounIndex}
+              colorClass="text-violet-400"
+            />
+          </div>
+
+          {/* Dynamic Content */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${verbs[verbIndex]}-${nouns[nounIndex]}`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="text-center"
+            >
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white mb-4">
+                {content.title}
+              </h3>
+
+              <p className="text-gray-400 text-base sm:text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
+                {content.description}
+              </p>
+
+              <div className="flex flex-wrap gap-3 justify-center">
+                {content.features.map((feature, i) => (
+                  <motion.span
+                    key={feature}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: i * 0.1, duration: 0.3 }}
+                    className="px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full text-sm text-purple-300"
+                  >
+                    {feature}
+                  </motion.span>
+                ))}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* CTA */}
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="mt-12 px-8 py-4 bg-gradient-to-r from-purple-600 to-violet-600 text-white font-semibold text-base sm:text-lg rounded-full hover:from-purple-500 hover:to-violet-500 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/25"
+          >
+            Get Started →
+          </motion.button>
+        </div>
       </div>
     </section>
   );

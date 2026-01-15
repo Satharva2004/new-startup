@@ -1,61 +1,264 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Shield, Box, Gauge, FileText, RefreshCcw, FileCode, Search, Settings, MessageSquare, Workflow, TrendingUp, CheckCircle2 } from 'lucide-react';
 
+// New 4-step lifecycle stages
 interface LifecycleStage {
     id: number;
     name: string;
+    title: string;
+    description: string;
     position: { x: number; y: number };
-    items: string[];
-    delay: number;
 }
 
 const lifecycleStages: LifecycleStage[] = [
     {
         id: 1,
         name: "DISCOVERY",
-        position: { x: 0, y: 20 },
-        items: ["Discover new product", "Receive seasonal promotion"],
-        delay: 0
+        title: "Smart Analyzing",
+        description: "We assess your needs and identify AI solutions to streamline workflows and improve efficiency.",
+        position: { x: 15, y: 25 },
     },
     {
         id: 2,
-        name: "CONSIDERATION",
-        position: { x: 40, y: 15 },
-        items: ["Revisit wishlist", "Ask about product"],
-        delay: 0.2
+        name: "DEVELOPMENT",
+        title: "AI Development",
+        description: "Our team builds intelligent automation systems tailored to your business processes.",
+        position: { x: 75, y: 25 },
     },
     {
         id: 3,
-        name: "AWARENESS",
-        position: { x: 75, y: 30 },
-        items: ["Review loyalty offers", "Compare products"],
-        delay: 0.4
+        name: "INTEGRATION",
+        title: "Seamless Integration",
+        description: "We smoothly integrate AI solutions into your existing infrastructure with minimal disruption.",
+        position: { x: 15, y: 70 },
     },
     {
         id: 4,
-        name: "PURCHASE",
-        position: { x: 70, y: 65 },
-        items: ["Buy product", "Browse catalog"],
-        delay: 0.6
-    },
-    {
-        id: 5,
-        name: "POST-PURCHASE",
-        position: { x: 35, y: 65 },
-        items: ["Send support query", "Track order"],
-        delay: 0.8
-    },
-    {
-        id: 6,
-        name: "RE-ENGAGEMENT",
-        position: { x: -5, y: 60 },
-        items: ["Automated follow-ups recover 30% lost revenue opportunities", "Personalized messaging drives higher conversion rates"],
-        delay: 1.0
+        name: "OPTIMIZATION",
+        title: "Continuous Optimization",
+        description: "We refine performance, analyze insights, and enhance automation for long-term growth.",
+        position: { x: 75, y: 70 },
     }
 ];
 
-// Scroll distance multiplier - how many viewport heights to scroll through
+// Scroll distance multiplier
 const SCROLL_MULTIPLIER = 2;
+
+// Step 1: Radar Scan Animation Component
+const RadarScan = () => {
+    return (
+        <div className="relative w-full aspect-square max-w-[160px] mx-auto">
+            {/* Outer circle */}
+            <div className="absolute inset-0 rounded-full border-2 border-gray-700/50" />
+            {/* Inner glow */}
+            <div className="absolute inset-4 rounded-full border border-gray-700/30" />
+            {/* Radar sweep */}
+            <motion.div
+                className="absolute inset-0 origin-center"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            >
+                <div
+                    className="absolute top-1/2 left-1/2 w-1/2 h-1"
+                    style={{
+                        background: 'linear-gradient(90deg, transparent 0%, #a855f7 50%, #7c3aed 100%)',
+                        transformOrigin: 'left center',
+                        transform: 'translateY(-50%)',
+                    }}
+                />
+                {/* Pie slice */}
+                <div
+                    className="absolute top-0 left-1/2 w-1/2 h-1/2 origin-bottom-left"
+                    style={{
+                        background: 'conic-gradient(from 0deg, rgba(168, 85, 247, 0.4) 0deg, transparent 45deg)',
+                        borderRadius: '0 100% 0 0',
+                    }}
+                />
+            </motion.div>
+            {/* Center dot */}
+            <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-purple-500 rounded-full transform -translate-x-1/2 -translate-y-1/2" />
+            {/* Label */}
+            <p className="absolute -bottom-6 left-0 right-0 text-center text-gray-400 text-xs">
+                Analyzing current workflow...
+            </p>
+        </div>
+    );
+};
+
+// Step 2: Code Editor Animation Component
+const CodeEditor = () => {
+    const codeLines = [
+        { indent: 0, content: <><span className="text-purple-400">def</span> <span className="text-blue-400">get_status</span><span className="text-yellow-400">(self)</span>:</> },
+        { indent: 1, content: <><span className="text-purple-400">return</span> <span className="text-green-400">f"Status: {'{'}self.status{'}'}"</span></> },
+        { indent: 0, content: "" },
+        { indent: 0, content: <><span className="text-purple-400">class</span> <span className="text-blue-400">AutomationTrigger</span>:</> },
+        { indent: 1, content: <><span className="text-gray-400">def __init__(self, threshold):</span></> },
+        { indent: 2, content: <span className="text-gray-400">self.threshold = threshold</span> },
+        { indent: 2, content: <span className="text-gray-400">self.status = "inactive"</span> },
+        { indent: 0, content: "" },
+        { indent: 1, content: <><span className="text-purple-400">def</span> <span className="text-blue-400">activate</span><span className="text-yellow-400">(self)</span>:</> },
+        { indent: 2, content: <span className="text-gray-400">self.status = "active"</span> },
+    ];
+
+    return (
+        <div className="bg-black/60 border border-gray-800 rounded-xl overflow-hidden">
+            {/* Editor header */}
+            <div className="bg-black/80 px-3 py-2 flex items-center justify-between border-b border-gray-800">
+                <div className="flex items-center gap-2 text-gray-500">
+                    <span className="text-xs">←</span>
+                    <span className="text-xs">→</span>
+                </div>
+                <div className="flex-1 mx-4">
+                    <div className="h-1 bg-gray-800 rounded-full w-16 mx-auto" />
+                </div>
+                <div className="flex items-center gap-2 text-gray-500 text-xs">
+                    <span>□</span>
+                    <span>—</span>
+                    <span>×</span>
+                </div>
+            </div>
+
+            <div className="flex">
+                {/* Sidebar */}
+                <div className="bg-black/40 border-r border-gray-800 p-3 space-y-3">
+                    <FileCode className="w-4 h-4 text-gray-500" />
+                    <Search className="w-4 h-4 text-gray-500" />
+                    <Settings className="w-4 h-4 text-gray-500" />
+                </div>
+
+                {/* Code area with infinite scroll animation */}
+                <div
+                    className="flex-1 p-4 font-mono text-xs overflow-hidden relative h-[140px]"
+                    style={{
+                        maskImage: 'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)',
+                        WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)',
+                    }}
+                >
+                    <div className="animate-code-scroll">
+                        {/* Triple repeat for seamless infinite loop */}
+                        {[...codeLines, ...codeLines, ...codeLines].map((line, i) => (
+                            <div key={i} className="whitespace-nowrap leading-5" style={{ paddingLeft: `${line.indent * 16}px` }}>
+                                {line.content || '\u00A0'}
+                            </div>
+                        ))}
+                    </div>
+                    <style>{`
+                        @keyframes codeScroll {
+                            0% { transform: translateY(0); }
+                            100% { transform: translateY(-33.333%); }
+                        }
+                        .animate-code-scroll {
+                            animation: codeScroll 8s linear infinite;
+                        }
+                    `}</style>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Step 3: Integration Animation Component
+const IntegrationVisual = () => {
+    return (
+        <div className="bg-[#0a0a0a] border border-gray-800/50 rounded-2xl p-8 sm:p-10">
+            <div className="flex items-center justify-center gap-8">
+                {/* Our solution - animated circles */}
+                <div className="text-center">
+                    <motion.div
+                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-purple-600 to-purple-900 mx-auto mb-3 flex items-center justify-center"
+                        animate={{ rotate: [0, 360] }}
+                        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                    >
+                        <motion.div
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-purple-400/50"
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                        />
+                    </motion.div>
+                    <span className="text-gray-400 text-xs">Our solution</span>
+                </div>
+
+                {/* Connection dots */}
+                <div className="flex items-center gap-1">
+                    {[0, 1, 2].map((i) => (
+                        <motion.div
+                            key={i}
+                            className="w-2 h-2 bg-purple-500 rounded-full"
+                            animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.2, 0.8] }}
+                            transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.3 }}
+                        />
+                    ))}
+                </div>
+
+                {/* Your stack */}
+                <div className="text-center">
+                    <motion.div
+                        className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-purple-600 to-violet-900 rounded-xl mx-auto mb-3 flex items-center justify-center"
+                        animate={{ rotate: [0, 5, 0, -5, 0] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                        <span className="text-purple-300 text-2xl font-bold">M</span>
+                    </motion.div>
+                    <span className="text-gray-400 text-xs">Your stack</span>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Step 4: Optimization Status Component
+const OptimizationStatus = () => {
+    const systems = [
+        { icon: MessageSquare, name: "Chatbot system", status: "Efficiency will increase by 20%", statusIcon: "loading" },
+        { icon: Workflow, name: "Workflow system", status: "Update available", statusIcon: "up" },
+        { icon: TrendingUp, name: "Sales system", status: "Up to date", statusIcon: "check" },
+    ];
+
+    return (
+        <div className="space-y-3">
+            {systems.map((system, idx) => (
+                <motion.div
+                    key={system.name}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.15 }}
+                    className="bg-black/40 border border-gray-800 rounded-xl p-4 flex items-center gap-4"
+                >
+                    <div className="w-10 h-10 bg-black/60 border border-gray-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <system.icon className="w-5 h-5 text-gray-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <span className="text-white text-sm font-medium block">{system.name}</span>
+                        <span className="text-gray-500 text-xs">{system.status}</span>
+                    </div>
+                    <div className="flex-shrink-0">
+                        {system.statusIcon === "loading" && (
+                            <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                            >
+                                <div className="w-5 h-5 border-2 border-purple-500 border-t-transparent rounded-full" />
+                            </motion.div>
+                        )}
+                        {system.statusIcon === "up" && <TrendingUp className="w-5 h-5 text-purple-500" />}
+                        {system.statusIcon === "check" && <CheckCircle2 className="w-5 h-5 text-purple-500" />}
+                    </div>
+                </motion.div>
+            ))}
+        </div>
+    );
+};
+
+// Step check items for Step 1
+const step1Items = [
+    { icon: Shield, label: "System check" },
+    { icon: Box, label: "Process check" },
+    { icon: Gauge, label: "Speed check" },
+    { icon: FileText, label: "Manual work" },
+    { icon: RefreshCcw, label: "Repetitive task" },
+];
 
 export const CustomerLifecycleSection = () => {
     const [visibleStages, setVisibleStages] = useState<number[]>([]);
@@ -65,7 +268,7 @@ export const CustomerLifecycleSection = () => {
     const [isFixed, setIsFixed] = useState(false);
     const [isAtBottom, setIsAtBottom] = useState(false);
 
-    // Continuously update smooth progress for buttery animations
+    // Continuously update smooth progress
     useEffect(() => {
         let animationId: number;
         const animate = () => {
@@ -82,14 +285,14 @@ export const CustomerLifecycleSection = () => {
 
     // Update visible stages based on smooth progress
     useEffect(() => {
-        const stagesToShow = Math.floor(smoothProgress * lifecycleStages.length * 1.2);
+        const stagesToShow = Math.floor(smoothProgress * lifecycleStages.length * 1.5);
         const newVisibleStages = lifecycleStages
             .slice(0, Math.min(lifecycleStages.length, stagesToShow + 1))
             .map(stage => stage.id);
         setVisibleStages(newVisibleStages);
     }, [smoothProgress]);
 
-    // Scroll-based progress calculation with fixed positioning control
+    // Scroll-based progress calculation
     useEffect(() => {
         const handleScroll = () => {
             if (!containerRef.current) return;
@@ -98,7 +301,6 @@ export const CustomerLifecycleSection = () => {
             const windowHeight = window.innerHeight;
             const scrollDistance = windowHeight * SCROLL_MULTIPLIER;
 
-            // Before section - not yet in view
             if (rect.top > 0) {
                 setIsFixed(false);
                 setIsAtBottom(false);
@@ -106,7 +308,6 @@ export const CustomerLifecycleSection = () => {
                 return;
             }
 
-            // After section - scrolled past
             if (rect.bottom <= windowHeight) {
                 setIsFixed(false);
                 setIsAtBottom(true);
@@ -114,7 +315,6 @@ export const CustomerLifecycleSection = () => {
                 return;
             }
 
-            // In the section - calculate progress
             const scrolledIntoSection = -rect.top;
             const progress = Math.max(0, Math.min(1, scrolledIntoSection / scrollDistance));
 
@@ -129,7 +329,6 @@ export const CustomerLifecycleSection = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    // Calculate content position style
     const getContentStyle = (): React.CSSProperties => {
         if (isFixed) {
             return {
@@ -161,35 +360,87 @@ export const CustomerLifecycleSection = () => {
         };
     };
 
+    // Render step card for mobile
+    const renderStepCard = (step: number) => {
+        switch (step) {
+            case 1:
+                return (
+                    <div className="grid grid-cols-2 gap-4 mt-6">
+                        <div className="flex items-center justify-center py-4">
+                            <RadarScan />
+                        </div>
+                        <div className="space-y-2">
+                            {step1Items.map((item, i) => (
+                                <motion.div
+                                    key={item.label}
+                                    initial={{ opacity: 0, x: 10 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: i * 0.1 }}
+                                    className="bg-black/40 border border-gray-800 rounded-lg px-3 py-2 flex items-center gap-2"
+                                >
+                                    <item.icon className="w-3 h-3 text-gray-400" />
+                                    <span className="text-white text-xs">{item.label}</span>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            case 2:
+                return <div className="mt-6"><CodeEditor /></div>;
+            case 3:
+                return <div className="mt-6"><IntegrationVisual /></div>;
+            case 4:
+                return <div className="mt-6"><OptimizationStatus /></div>;
+            default:
+                return null;
+        }
+    };
+
     return (
         <>
-            {/* Mobile: straight timeline - no pinning needed */}
-            <section id="lifecycle" className="md:hidden bg-[#050505]">
-                <div className="container mx-auto px-6 py-12">
-                    <h2 className="text-2xl font-bold text-white mb-6">Drive value across the customer lifecycle</h2>
-                    <div className="relative pl-6">
-                        <span className="absolute left-2 top-0 bottom-0 w-0.5 bg-purple-500/30" />
+            {/* Mobile: Process Steps Cards */}
+            <section id="lifecycle" className="md:hidden bg-[#050505] py-16 px-4">
+                <div className="max-w-lg mx-auto">
+                    {/* Section Header */}
+                    <div className="text-center mb-10">
+                        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+                            Drive value across the{" "}
+                            <span className="text-purple-400">customer lifecycle</span>
+                        </h2>
+                        <p className="text-gray-400 text-sm">
+                            Each touchpoint is a revenue opportunity
+                        </p>
+                    </div>
+
+                    {/* Process Steps */}
+                    <div className="space-y-6">
                         {lifecycleStages.map((stage, idx) => (
                             <motion.div
                                 key={stage.id}
                                 initial={{ opacity: 0, y: 24 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: false, margin: "-20% 0px -10% 0px" }}
-                                transition={{ duration: 0.5, delay: 0.05 * idx }}
-                                className="relative mb-6 pr-6"
+                                viewport={{ once: true, margin: "-10% 0px" }}
+                                transition={{ duration: 0.5, delay: 0.1 * idx }}
+                                className="bg-[#0d0d0d] border border-gray-800 rounded-3xl p-6 sm:p-8"
                             >
-                                <span className="absolute -left-0.5 top-2 w-2 h-2 rounded-full bg-purple-500" />
-                                <div className="bg-purple-500/10 backdrop-blur-sm rounded-xl shadow-md p-4 border border-purple-500/20">
-                                    <div className="text-xs font-bold text-purple-400 mb-2">{stage.name}</div>
-                                    <ul className="space-y-2">
-                                        {stage.items.map((it, i) => (
-                                            <li key={i} className="flex items-start gap-2 text-gray-300 text-sm">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-2" />
-                                                <span>{it}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+                                {/* Step badge */}
+                                <span className="inline-block px-4 py-1.5 bg-[#1a1a1a] border border-gray-700 rounded-lg text-gray-400 text-sm font-medium mb-6">
+                                    Step {stage.id}
+                                </span>
+
+                                {/* Title */}
+                                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+                                    {stage.title}
+                                </h3>
+
+                                {/* Description */}
+                                <p className="text-gray-400 text-base leading-relaxed">
+                                    {stage.description}
+                                </p>
+
+                                {/* Visual content */}
+                                {renderStepCard(stage.id)}
                             </motion.div>
                         ))}
                     </div>
@@ -205,15 +456,13 @@ export const CustomerLifecycleSection = () => {
                     height: `${100 + (100 * SCROLL_MULTIPLIER)}vh`
                 }}
             >
-                {/* Content container - position controlled by JS */}
                 <div
                     className="bg-[#050505]"
                     style={getContentStyle()}
                 >
-                    {/* Content wrapper - centered both vertically and horizontally */}
                     <div className="h-full flex items-center justify-center">
                         <div className="container mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                            {/* Left Content - no entrance animation to prevent stutter */}
+                            {/* Left Content */}
                             <div className="space-y-8 text-white">
                                 <div className="space-y-4">
                                     <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white leading-tight tracking-tight">
@@ -221,8 +470,7 @@ export const CustomerLifecycleSection = () => {
                                         <span className="text-purple-400">customer lifecycle</span>
                                     </h2>
 
-                                    <div className="space-y-4"
-                                    >
+                                    <div className="space-y-4">
                                         <div className="flex items-center justify-start gap-3 sm:gap-4 flex-wrap">
                                             <span className="inline-block px-4 py-1 rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/30 text-base sm:text-xl font-bold">
                                                 Each touchpoint
@@ -240,9 +488,7 @@ export const CustomerLifecycleSection = () => {
                                         </p>
                                     </div>
                                 </div>
-
                             </div>
-
 
                             {/* Right Side - Infinity Loop Diagram */}
                             <div className="relative h-[420px] sm:h-[520px] lg:h-[600px] w-full">
@@ -271,84 +517,40 @@ export const CustomerLifecycleSection = () => {
                                         style={{
                                             strokeDasharray: 1000,
                                             strokeDashoffset: 1000 - (1000 * smoothProgress),
-                                            transition: 'none' // Smooth progress handles this
+                                            transition: 'none'
                                         }}
                                     />
                                 </svg>
 
-                                {/* Lifecycle Stages */}
+                                {/* Lifecycle Stages - 4 steps */}
                                 <AnimatePresence>
                                     {lifecycleStages.map((stage) => (
-                                        visibleStages.includes(stage.id) && (
-                                            <motion.div
-                                                key={stage.id}
-                                                initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                                exit={{ opacity: 0, scale: 0.8 }}
-                                                transition={{
-                                                    duration: 0.5,
-                                                    ease: [0.25, 0.46, 0.45, 0.94] // Custom easing for smoother feel
-                                                }}
-                                                className="absolute"
-                                                style={{
-                                                    left: `${stage.position.x}%`,
-                                                    top: `${stage.position.y}%`,
-                                                    transform: 'translate(-50%, -50%)'
-                                                }}
-                                            >
-                                                {/* Stage Label */}
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: -10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ delay: 0.1, duration: 0.4 }}
-                                                    className="mb-3 sm:mb-4"
-                                                >
-                                                    <div className="bg-purple-500/20 backdrop-blur-sm border border-purple-500/30 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-center">
-                                                        <span className="text-xs sm:text-sm font-bold text-purple-300 whitespace-nowrap">
-                                                            {stage.name}
-                                                        </span>
-                                                    </div>
-                                                </motion.div>
-
-                                                {/* Items Card */}
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 15 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ delay: 0.2, duration: 0.4 }}
-                                                >
-                                                    <div className="rounded-xl border bg-[#0a0a0a]/90 backdrop-blur-md shadow-xl shadow-purple-500/5 p-3 sm:p-3.5 max-w-[160px] sm:max-w-[180px] border-purple-500/20">
-                                                        <ul className="space-y-1.5 sm:space-y-1.5">
-                                                            {stage.items.map((item, index) => (
-                                                                <motion.li
-                                                                    key={index}
-                                                                    initial={{ opacity: 0, x: -10 }}
-                                                                    animate={{ opacity: 1, x: 0 }}
-                                                                    transition={{ delay: 0.25 + index * 0.08, duration: 0.3 }}
-                                                                    className="flex items-start space-x-2 text-[11px] sm:text-xs"
-                                                                >
-                                                                    <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-1.5 flex-shrink-0" />
-                                                                    <span className="text-gray-300">{item}</span>
-                                                                </motion.li>
-                                                            ))}
-                                                        </ul>
-                                                    </div>
-                                                </motion.div>
-                                            </motion.div>
-                                        )
+                                        <motion.div
+                                            key={stage.id}
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            animate={{
+                                                opacity: visibleStages.includes(stage.id) ? 1 : 0,
+                                                scale: visibleStages.includes(stage.id) ? 1 : 0.8
+                                            }}
+                                            exit={{ opacity: 0, scale: 0.8 }}
+                                            transition={{ duration: 0.5, ease: "easeOut" }}
+                                            className="absolute bg-purple-900/30 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-purple-500/30 shadow-lg"
+                                            style={{
+                                                left: `${stage.position.x}%`,
+                                                top: `${stage.position.y}%`,
+                                                transform: 'translate(-50%, -50%)',
+                                                maxWidth: '160px'
+                                            }}
+                                        >
+                                            <div className="text-[10px] sm:text-xs font-bold text-purple-400 mb-1 uppercase tracking-wider">
+                                                Step {stage.id}
+                                            </div>
+                                            <div className="text-xs sm:text-sm font-semibold text-white">
+                                                {stage.title}
+                                            </div>
+                                        </motion.div>
                                     ))}
                                 </AnimatePresence>
-
-                                {/* Center Icon */}
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0 }}
-                                    animate={{
-                                        opacity: visibleStages.length >= 3 ? 1 : 0,
-                                        scale: visibleStages.length >= 3 ? 1 : 0
-                                    }}
-                                    transition={{ duration: 0.6, ease: "easeOut" }}
-                                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                                >
-                                </motion.div>
                             </div>
                         </div>
                     </div>
@@ -357,4 +559,5 @@ export const CustomerLifecycleSection = () => {
         </>
     );
 };
+
 export default CustomerLifecycleSection;
