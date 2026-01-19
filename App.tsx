@@ -3,7 +3,7 @@ import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import LogoMarquee from './components/LogoMarquee';
 import MetaScroll from './components/MetaScroll';
-import Services from './components/Services';
+
 import Founders from './components/Founders';
 import Footer from './components/Footer';
 import gsap from 'gsap';
@@ -24,7 +24,7 @@ const App: React.FC = () => {
         <Hero />
         <LogoMarquee />
         <MetaScroll />
-        <Services />
+
         <Founders />
       </main>
       <Footer />
