@@ -3,7 +3,6 @@ import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import LogoMarquee from './components/LogoMarquee';
 import MetaScroll from './components/MetaScroll';
-import TechLab from './components/TechLab';
 import Services from './components/Services';
 import Founders from './components/Founders';
 import Footer from './components/Footer';
@@ -25,7 +24,6 @@ const App: React.FC = () => {
         <Hero />
         <LogoMarquee />
         <MetaScroll />
-        <TechLab />
         {/* <Services /> */}
         <Founders />
       </main>

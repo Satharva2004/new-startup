@@ -15,12 +15,12 @@ const FooterFlower = () => {
             const scrollY = window.scrollY;
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
             const scrollProgress = Math.min(scrollY / docHeight, 1);
-            targetRotation = scrollProgress * 720;
+            targetRotation = scrollProgress * 3000;
         };
 
         const animate = () => {
             const diff = targetRotation - currentRotation;
-            currentRotation += diff * 0.08;
+            currentRotation += diff * 0.12;
 
             if (flowerRef.current) {
                 flowerRef.current.style.transform = `rotate(${currentRotation}deg)`;
@@ -52,8 +52,8 @@ const FooterFlower = () => {
                 <path
                     d="M200 50 Q230 120 220 180 Q210 200 200 200 Q190 200 180 180 Q170 120 200 50Z"
                     fill={gradient}
-                    style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.4))' }}
-                />
+                    style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.4))' }} />
+
                 <path
                     d="M200 60 Q205 120 202 175 Q200 185 200 200"
                     stroke={isBlack ? 'rgba(80,80,80,0.4)' : 'rgba(168,85,247,0.4)'}
