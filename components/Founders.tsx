@@ -10,7 +10,7 @@ const Founders: React.FC = () => {
   const card1Ref = useRef<HTMLDivElement>(null);
   const card2Ref = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
-  const statsRef = useRef<HTMLDivElement>(null);
+
 
   const founders = [
     {
@@ -45,12 +45,7 @@ const Founders: React.FC = () => {
     },
   ];
 
-  const stats = [
-    { value: '50+', label: 'Projects Delivered' },
-    { value: '98%', label: 'Client Satisfaction' },
-    { value: '$2M+', label: 'Revenue Generated' },
-    { value: '24/7', label: 'Support' },
-  ];
+
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -105,23 +100,7 @@ const Founders: React.FC = () => {
         }
       );
 
-      // Stats animation
-      gsap.fromTo(
-        statsRef.current?.children || [],
-        { opacity: 0, y: 40, scale: 0.9 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: 'back.out(1.7)',
-          scrollTrigger: {
-            trigger: statsRef.current,
-            start: 'top 85%',
-          },
-        }
-      );
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -398,42 +377,7 @@ const Founders: React.FC = () => {
           })}
         </div>
 
-        {/* Stats Section */}
-        <div
-          ref={statsRef}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"
-        >
-          {stats.map((stat, index) => (
-            <div
-              key={index}
-              className="group relative p-6 rounded-2xl text-center transition-all duration-300 hover:scale-105"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(168, 85, 247, 0.03) 100%)',
-                border: '1px solid rgba(168, 85, 247, 0.1)',
-              }}
-            >
-              {/* Hover glow */}
-              <div
-                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{
-                  background: 'radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.1) 0%, transparent 70%)',
-                }}
-              />
 
-              <div
-                className="relative text-3xl sm:text-4xl font-bold mb-2 bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: 'linear-gradient(135deg, #ffffff 0%, #a855f7 100%)',
-                }}
-              >
-                {stat.value}
-              </div>
-              <div className="relative text-gray-500 text-sm font-medium">
-                {stat.label}
-              </div>
-            </div>
-          ))}
-        </div>
 
         {/* Bottom CTA */}
         <div className="mt-32 max-w-5xl mx-auto">

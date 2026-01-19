@@ -72,11 +72,14 @@ const PinnedScrollSection: React.FC = () => {
     }, []);
 
     const Card = ({ title, desc }: { title: string; desc: string }) => (
-        <div className="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm hover:bg-white/10 transition-colors duration-300 w-full mb-4 last:mb-0 h-[200px] flex flex-col justify-center">
-            <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 mb-2">
-                {title}
-            </h3>
-            <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
+        <div className="relative h-[200px] w-full overflow-hidden rounded-2xl p-[1px] mb-4 last:mb-0">
+            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#1a1a1a_0%,#a855f7_50%,#1a1a1a_100%)]" />
+            <div className="relative h-full w-full rounded-2xl bg-black p-6 flex flex-col justify-center backdrop-blur-3xl">
+                <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 mb-2">
+                    {title}
+                </h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
+            </div>
         </div>
     );
 
@@ -98,7 +101,7 @@ const PinnedScrollSection: React.FC = () => {
             {/* Center Column (Hero) */}
             <div
                 ref={centerCardRef}
-                className="w-full md:w-2/5 h-[50vh] md:h-[70vh] bg-gradient-to-br from-purple-900/40 to-black border border-purple-500/30 rounded-3xl p-8 flex flex-col justify-end relative backdrop-blur-xl z-20 shadow-2xl shadow-purple-900/20"
+                className="w-full md:w-2/5 h-[50vh] md:h-[70vh] bg-gradient-to-br from-purple-900/40 to-black border border-purple-500/30 rounded-3xl p-8 flex flex-col justify-end relative backdrop-blur-xl z-20 shadow-[0_0_50px_-12px_rgba(168,85,247,0.5)]"
             >
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1974&auto=format&fit=crop')] bg-cover bg-center opacity-30 mix-blend-overlay rounded-3xl" />
                 <div className="relative z-10">
