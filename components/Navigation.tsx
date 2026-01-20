@@ -1,27 +1,37 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Navigation: React.FC = () => {
   return (
     <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 p-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10 shadow-lg shadow-black/20 pointer-events-auto">
       {/* Logo */}
-      <div className="pl-4 pr-2 text-lg font-medium tracking-tight text-white flex items-center gap-1">
+      <Link to="/" className="pl-4 pr-2 text-lg font-medium tracking-tight text-white flex items-center gap-1 hover:opacity-80 transition-opacity">
         <span className="font-serif italic text-xl">⌘</span> Delphi
-      </div>
+      </Link>
 
       {/* Separator */}
       <div className="w-px h-4 bg-white/10 mx-2 hidden md:block" />
 
       {/* Links */}
       <div className="hidden md:flex items-center gap-6 px-2">
-        {['Services', 'Case Studies', 'About'].map((item) => (
-          <a
-            key={item}
-            href="#"
-            className="text-sm font-medium transition-colors duration-300 text-gray-400 hover:text-white"
-          >
-            {item}
-          </a>
-        ))}
+        <a
+          href="#services"
+          className="text-sm font-medium transition-colors duration-300 text-gray-400 hover:text-white"
+        >
+          Services
+        </a>
+        <Link
+          to="/case-studies"
+          className="text-sm font-medium transition-colors duration-300 text-gray-400 hover:text-white"
+        >
+          Case Studies
+        </Link>
+        <a
+          href="#about"
+          className="text-sm font-medium transition-colors duration-300 text-gray-400 hover:text-white"
+        >
+          About
+        </a>
       </div>
 
       {/* CTA */}

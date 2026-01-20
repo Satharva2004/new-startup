@@ -1,6 +1,7 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Shield, Box, Gauge, FileText, RefreshCcw, FileCode, Search, Settings, MessageSquare, Workflow, TrendingUp, CheckCircle2 } from 'lucide-react';
+import GlowingCard from './GlowingCard';
 
 // New 4-step lifecycle stages
 interface LifecycleStage {
@@ -17,28 +18,28 @@ const lifecycleStages: LifecycleStage[] = [
         name: "DISCOVERY",
         title: "Smart Analyzing",
         description: "Identify AI solutions to streamline workflows and improve efficiency.",
-        position: { x: 0, y: 15 },
+        position: { x: 15, y: 15 },
     },
     {
         id: 2,
         name: "DEVELOPMENT",
         title: "AI Development",
         description: "Build intelligent automation systems tailored to your business.",
-        position: { x: 55, y: 15 },
+        position: { x: 60, y: 15 },
     },
     {
         id: 3,
         name: "INTEGRATION",
         title: "Seamless Integration",
         description: "Integrate AI with minimal disruption to your infrastructure.",
-        position: { x: 0, y: 60 },
+        position: { x: 15, y: 65 },
     },
     {
         id: 4,
         name: "OPTIMIZATION",
         title: "Optimization",
         description: "Refine performance and enhance automation for growth.",
-        position: { x: 55, y: 60 },
+        position: { x: 60, y: 65 },
     }
 ];
 
@@ -422,25 +423,29 @@ export const CustomerLifecycleSection = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, margin: "-10% 0px" }}
                                 transition={{ duration: 0.5, delay: 0.1 * idx }}
-                                className="bg-[#0d0d0d] border border-gray-800 rounded-3xl p-6 sm:p-8"
+                                className="rounded-3xl"
                             >
-                                {/* Step badge */}
-                                <span className="inline-block px-4 py-1.5 bg-[#1a1a1a] border border-gray-700 rounded-lg text-gray-400 text-sm font-medium mb-6">
-                                    Step {stage.id}
-                                </span>
+                                <GlowingCard className="rounded-3xl h-full">
+                                    <div className="p-6 sm:p-8">
+                                        {/* Step badge with gradient */}
+                                        <span className="inline-block px-4 py-2 bg-gradient-to-r from-purple-600 to-violet-600 rounded-lg text-white text-sm font-bold mb-6 shadow-lg shadow-purple-500/20 uppercase tracking-wider">
+                                            Step {stage.id}
+                                        </span>
 
-                                {/* Title */}
-                                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3">
-                                    {stage.title}
-                                </h3>
+                                        {/* Title */}
+                                        <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">
+                                            {stage.title}
+                                        </h3>
 
-                                {/* Description */}
-                                <p className="text-gray-400 text-base leading-relaxed">
-                                    {stage.description}
-                                </p>
+                                        {/* Description */}
+                                        <p className="text-gray-400 text-base leading-relaxed mb-4">
+                                            {stage.description}
+                                        </p>
 
-                                {/* Visual content */}
-                                {renderStepCard(stage.id)}
+                                        {/* Visual content */}
+                                        {renderStepCard(stage.id)}
+                                    </div>
+                                </GlowingCard>
                             </motion.div>
                         ))}
                     </div>
@@ -460,38 +465,10 @@ export const CustomerLifecycleSection = () => {
                     className="bg-[#050505]"
                     style={getContentStyle()}
                 >
-                    <div className="h-full flex items-center justify-center">
-                        <div className="container mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                            {/* Left Content */}
-                            <div className="space-y-8 text-white">
-                                <div className="space-y-4">
-                                    <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-white leading-tight tracking-tight">
-                                        Drive value across the{" "}
-                                        <span className="text-purple-400">customer lifecycle</span>
-                                    </h2>
-
-                                    <div className="space-y-4">
-                                        <div className="flex items-center justify-start gap-3 sm:gap-4 flex-wrap">
-                                            <span className="inline-block px-4 py-1 rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/30 text-base sm:text-xl font-bold">
-                                                Each touchpoint
-                                            </span>
-                                            <span className="text-xl sm:text-2xl font-bold text-gray-500">=</span>
-                                            <span className="inline-block px-4 py-1 rounded-lg bg-violet-500/20 text-violet-400 border border-violet-500/30 text-base sm:text-xl font-bold">
-                                                Revenue opportunity
-                                            </span>
-                                        </div>
-
-                                        <p className="text-base sm:text-lg leading-relaxed text-gray-400 max-w-lg">
-                                            At each stage, Business Messaging plays a pivotal role,
-                                            unblocking cost savings and new revenue opportunities while
-                                            emphasizing retention.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Right Side - Infinity Loop Diagram */}
-                            <div className="relative h-[420px] sm:h-[520px] lg:h-[600px] w-full">
+                    <div className="h-full flex items-center justify-center pb-20">
+                        <div className="container mx-auto px-6 lg:px-12 flex flex-col gap-12 items-center">
+                            {/* Infinity Loop Diagram */}
+                            <div className="relative h-[420px] sm:h-[520px] lg:h-[600px] w-full max-w-5xl">
                                 {/* Infinity Loop Path */}
                                 <svg
                                     className="absolute inset-0 w-full h-full"
@@ -534,26 +511,35 @@ export const CustomerLifecycleSection = () => {
                                             }}
                                             exit={{ opacity: 0, scale: 0.8 }}
                                             transition={{ duration: 0.5, ease: "easeOut" }}
-                                            className="absolute bg-[#0d0d0d] rounded-2xl p-4 sm:p-5 border border-gray-800 shadow-xl backdrop-blur-md"
+                                            className="absolute rounded-3xl shadow-2xl backdrop-blur-md"
                                             style={{
                                                 left: `${stage.position.x}%`,
                                                 top: `${stage.position.y}%`,
                                                 transform: 'translate(-50%, -50%)',
-                                                width: '260px',
+                                                width: '280px',
                                                 zIndex: 20
                                             }}
                                         >
-                                            <div className="flex items-center justify-between mb-2">
-                                                <div className="text-[10px] sm:text-xs font-bold text-purple-400 uppercase tracking-wider bg-purple-500/10 px-2 py-1 rounded">
-                                                    Step {stage.id}
+                                            <GlowingCard className="rounded-3xl h-full">
+                                                <div className="p-5 sm:p-6">
+                                                    {/* Step Badge with Gradient */}
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <div className="text-xs font-bold text-white uppercase tracking-wider bg-gradient-to-r from-purple-600 to-violet-600 px-3 py-1.5 rounded-lg shadow-lg shadow-purple-500/20">
+                                                            Step {stage.id}
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Title */}
+                                                    <h3 className="text-base sm:text-lg font-bold text-white mb-2.5 leading-tight">
+                                                        {stage.title}
+                                                    </h3>
+
+                                                    {/* Description */}
+                                                    <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                                                        {stage.description}
+                                                    </p>
                                                 </div>
-                                            </div>
-                                            <div className="text-sm sm:text-base font-bold text-white mb-2">
-                                                {stage.title}
-                                            </div>
-                                            <p className="text-xs text-gray-400 leading-relaxed">
-                                                {stage.description}
-                                            </p>
+                                            </GlowingCard>
                                         </motion.div>
                                     ))}
                                 </AnimatePresence>

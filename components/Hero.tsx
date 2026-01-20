@@ -302,17 +302,20 @@ const Hero: React.FC = () => {
     <div ref={containerRef} className="relative w-full h-screen bg-[#050505]">
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block z-0" />
 
+      {/* Dark overlay for better text visibility */}
+      <div className="absolute inset-0 bg-black/50 z-0 pointer-events-none" />
+
       <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
         <div ref={contentRef} className="text-center flex flex-col items-center max-w-4xl px-6 pointer-events-auto">
 
-          <h1 className="text-[3.5rem] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6.5rem] leading-[1.1] font-bold tracking-tight mb-8">
+          <h1 className="text-[3.5rem] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6.5rem] leading-[1.1] font-bold tracking-tight mb-8 drop-shadow-2xl">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-white to-gray-500">Automation</span><br></br>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-white to-gray-500">
               for Business
             </span>
           </h1>
 
-          <p className="text-lg md:text-xl font-normal max-w-2xl leading-relaxed mb-10 text-gray-400">
+          <p className="text-lg md:text-xl font-normal max-w-2xl leading-relaxed mb-10 text-gray-300 drop-shadow-md">
             Delphi delivers comprehensive AI automation services using <span className="text-purple-400 font-medium">n8n workflows</span>, custom dashboards, and intelligent CRMs to scale your business.
           </p>
 
