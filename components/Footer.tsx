@@ -68,7 +68,7 @@ const FooterFlower = () => {
         <svg
             ref={flowerRef}
             viewBox="0 0 400 400"
-            className="w-48 h-48 md:w-64 md:h-64"
+            className="w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64"
             style={{ filter: 'drop-shadow(0 20px 40px rgba(147, 51, 234, 0.3))' }}
         >
             <defs>
@@ -99,45 +99,37 @@ const FooterFlower = () => {
 
 const Footer = () => {
     return (
-        <footer className="relative bg-[#050505] py-20 border-t border-gray-800/50">
+        <footer className="relative bg-[#050505] py-12 sm:py-16 md:py-20 border-t border-gray-800/50 overflow-hidden">
             {/* Background Flower - Right */}
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4 opacity-60 pointer-events-none">
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/4 opacity-40 sm:opacity-60 pointer-events-none hidden md:block">
                 <FooterFlower />
             </div>
 
             {/* Background Flower - Left */}
-            <div className="absolute -left-[340px] top-[-300px] bottom-0 translate-y-1/4 z-50 pointer-events-none rotate-45 transform scale-150">
+            <div className="absolute -left-[340px] top-[-300px] bottom-0 translate-y-1/4 z-50 pointer-events-none rotate-45 transform scale-150 hidden lg:block">
                 <FooterFlower />
             </div>
 
-            <div className="container mx-auto px-6 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+            <div className="container mx-auto px-4 sm:px-6 relative z-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10 md:gap-12">
                     {/* Logo & Description */}
-                    <div className="col-span-1 md:col-span-2">
-                        {/* <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6">
-                            <svg viewBox="0 0 24 24" className="w-6 h-6 text-black" fill="currentColor">
-                                <path d="M12 2L13.09 8.26L19 6L14.74 10.91L21 12L14.74 13.09L19 18L13.09 15.74L12 22L10.91 15.74L5 18L9.26 13.09L3 12L9.26 10.91L5 6L10.91 8.26L12 2Z" />
-                            </svg>
-                        </div> */}
-                        <br></br>
-                        <br></br>
-                        <br></br>
-                        <p className="text-gray-400 max-w-sm leading-relaxed">
+                    <div className="col-span-1 sm:col-span-2 md:col-span-2">
+                        <p className="text-gray-400 max-w-sm leading-relaxed text-sm sm:text-base">
                             Empowering entrepreneurs worldwide with streamlined operations and maximized revenue solutions.
                         </p>
                     </div>
 
                     {/* Links */}
                     <div>
-                        <h4 className="font-semibold text-white mb-4">Company</h4>
-                        <ul className="space-y-3">
+                        <h4 className="font-semibold text-white mb-3 sm:mb-4 text-sm sm:text-base">Company</h4>
+                        <ul className="space-y-2 sm:space-y-3">
                             {['About', 'Careers', 'Press', 'Contact'].map((item) => (
                                 <li key={item}>
                                     <a
                                         href={item === 'Contact' ? "https://wa.me/919136239673?text=Hey%20I%20want%20to%20automate%20my%20workflow" : "#"}
                                         target={item === 'Contact' ? "_blank" : undefined}
                                         rel={item === 'Contact' ? "noopener noreferrer" : undefined}
-                                        className="text-gray-400 hover:text-white transition-colors text-sm"
+                                        className="text-gray-400 hover:text-white transition-colors text-xs sm:text-sm"
                                     >
                                         {item}
                                     </a>
@@ -147,11 +139,11 @@ const Footer = () => {
                     </div>
 
                     <div>
-                        <h4 className="font-semibold text-white mb-4">Resources</h4>
-                        <ul className="space-y-3">
+                        <h4 className="font-semibold text-white mb-3 sm:mb-4 text-sm sm:text-base">Resources</h4>
+                        <ul className="space-y-2 sm:space-y-3">
                             {['Documentation', 'Blog', 'Support', 'API'].map((item) => (
                                 <li key={item}>
-                                    <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">
+                                    <a href="#" className="text-gray-400 hover:text-white transition-colors text-xs sm:text-sm">
                                         {item}
                                     </a>
                                 </li>
@@ -160,16 +152,16 @@ const Footer = () => {
                     </div>
                 </div>
 
-                <div className="mt-16 pt-8 border-t border-gray-800/50 flex flex-col md:flex-row items-center justify-between gap-6">
-                    <p className="text-sm text-gray-500">
+                <div className="mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-gray-800/50 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
+                    <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
                         © 2026 Delphi. All rights reserved.
                     </p>
-                    <div className="flex gap-8">
+                    <div className="flex gap-4 sm:gap-6 md:gap-8 flex-wrap justify-center sm:justify-end">
                         {['Privacy', 'Terms', 'Cookies'].map((item) => (
                             <a
                                 key={item}
                                 href="#"
-                                className="text-sm text-gray-500 hover:text-white transition-colors"
+                                className="text-xs sm:text-sm text-gray-500 hover:text-white transition-colors"
                             >
                                 {item}
                             </a>

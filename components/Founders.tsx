@@ -102,7 +102,7 @@ const Founders: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative py-32 overflow-hidden bg-[#050505]"
+      className="relative py-16 sm:py-24 md:py-32 overflow-hidden bg-[#050505]"
     >
       {/* Minimal Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -125,17 +125,17 @@ const Founders: React.FC = () => {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header Section */}
-        <div ref={titleRef} className="text-center mb-20">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight mb-6">
+        <div ref={titleRef} className="text-center mb-12 sm:mb-16 md:mb-20">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-4 sm:mb-6">
             <span className="text-white">Meet the </span>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-purple-300 to-purple-200">
               Visionaries
             </span>
           </h2>
 
-          <p className="text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed font-normal">
+          <p className="text-gray-400 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed font-normal px-2">
             Two industry pioneers who left Big Tech to build something extraordinary.
             <br className="hidden sm:block" />
             Combined 20+ years of experience from Google, Meta, and Stanford.
@@ -143,7 +143,7 @@ const Founders: React.FC = () => {
         </div>
 
         {/* Founders Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 mb-12 sm:mb-16 md:mb-20">
           {founders.map((founder, index) => {
             const cardRef = index === 0 ? card1Ref : card2Ref;
             const Icon = founder.icon;
@@ -155,7 +155,7 @@ const Founders: React.FC = () => {
                 className="group relative"
               >
                 {/* Card with Full Background Image */}
-                <div className="relative rounded-2xl overflow-hidden transition-all duration-500 group-hover:scale-[1.01] h-[450px]">
+                <div className="relative rounded-2xl overflow-hidden transition-all duration-500 group-hover:scale-[1.01] h-[350px] sm:h-[400px] md:h-[450px]">
                   {/* Background Image */}
                   <div className="absolute inset-0">
                     <img
@@ -175,22 +175,22 @@ const Founders: React.FC = () => {
                   <div className="absolute inset-0 rounded-2xl border border-purple-500/30 group-hover:border-purple-400/50 transition-colors duration-500" />
 
                   {/* Content - positioned at bottom */}
-                  <div className="relative h-full flex flex-col justify-end p-8">
+                  <div className="relative h-full flex flex-col justify-end p-6 sm:p-8">
 
 
                     {/* Name & Title */}
                     <div>
-                      <h3 className="text-3xl sm:text-4xl font-bold text-white mb-2 tracking-tight drop-shadow-lg">
+                      <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2 tracking-tight drop-shadow-lg">
                         {founder.name}
                       </h3>
-                      <p className="text-base font-semibold text-purple-300 drop-shadow-md">
+                      <p className="text-sm sm:text-base font-semibold text-purple-300 drop-shadow-md">
                         {founder.title}
                       </p>
                     </div>
 
                     {/* Social Links - Show on Hover */}
-                    <div className="opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0 mt-4 flex items-center gap-3">
-                      <span className="text-xs text-gray-300 font-medium drop-shadow-md">Connect:</span>
+                    <div className="opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0 mt-3 sm:mt-4 flex items-center gap-2 sm:gap-3">
+                      <span className="text-[10px] sm:text-xs text-gray-300 font-medium drop-shadow-md">Connect:</span>
                       {founder.socials.linkedin && (
                         <a
                           href={founder.socials.linkedin}
@@ -231,7 +231,7 @@ const Founders: React.FC = () => {
         </div>
 
         {/* Modern CTA Section */}
-        <div className="mt-32 max-w-4xl mx-auto">
+        <div className="mt-16 sm:mt-24 md:mt-32 max-w-4xl mx-auto px-4">
           <div className="relative rounded-2xl overflow-hidden">
             {/* Border */}
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/20 via-transparent to-violet-500/20 p-[1px]">
@@ -247,13 +247,13 @@ const Founders: React.FC = () => {
             <div className="absolute inset-0 rounded-2xl border border-white/5" />
 
             {/* Content */}
-            <div className="relative p-12 md:p-16 text-center">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight tracking-tight">
+            <div className="relative p-8 sm:p-12 md:p-16 text-center">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-3 sm:mb-4 leading-tight tracking-tight">
                 Let AI do the Work so<br className="hidden md:block" />
                 you can Scale Faster
               </h2>
 
-              <p className="text-gray-400 text-lg font-normal mb-8">
+              <p className="text-gray-400 text-base sm:text-lg font-normal mb-6 sm:mb-8">
                 Book a Call Today and Start Automating
               </p>
 
@@ -261,10 +261,10 @@ const Founders: React.FC = () => {
                 href="https://wa.me/919136239673?text=Hey%20I%20want%20to%20automate%20my%20workflow"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 hover:scale-105 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40"
               >
                 Book a free call
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
               </a>

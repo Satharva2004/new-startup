@@ -231,7 +231,9 @@ const Hero: React.FC = () => {
       powerPreference: "high-performance"
     });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // Limit pixel ratio on mobile devices for better performance
+    const isMobile = width < 768;
+    renderer.setPixelRatio(isMobile ? Math.min(window.devicePixelRatio, 1.5) : Math.min(window.devicePixelRatio, 2));
     rendererRef.current = renderer;
 
     // Generate segments
@@ -269,6 +271,7 @@ const Hero: React.FC = () => {
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limit pixel ratio on mobile for performance
     };
     window.addEventListener('resize', handleResize);
 
@@ -306,25 +309,25 @@ const Hero: React.FC = () => {
       <div className="absolute inset-0 bg-black/50 z-0 pointer-events-none" />
 
       <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-        <div ref={contentRef} className="text-center flex flex-col items-center max-w-4xl px-6 pointer-events-auto">
+        <div ref={contentRef} className="text-center flex flex-col items-center max-w-4xl px-4 sm:px-6 pointer-events-auto">
 
-          <h1 className="text-[3.5rem] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6.5rem] leading-[1.1] font-bold tracking-tight mb-8 drop-shadow-2xl">
+          <h1 className="text-[2.5rem] sm:text-[3.5rem] md:text-[4.5rem] lg:text-[5.5rem] xl:text-[6.5rem] leading-[1.1] font-bold tracking-tight mb-6 sm:mb-8 drop-shadow-2xl">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-white to-gray-500">Automation</span><br></br>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-white to-gray-500">
               for Business
             </span>
           </h1>
 
-          <p className="text-lg md:text-xl font-normal max-w-2xl leading-relaxed mb-10 text-gray-300 drop-shadow-md">
+          <p className="text-base sm:text-lg md:text-xl font-normal max-w-2xl leading-relaxed mb-8 sm:mb-10 text-gray-300 drop-shadow-md px-2">
             Delphi delivers comprehensive AI automation services using <span className="text-purple-400 font-medium">n8n workflows</span>, custom dashboards, and intelligent CRMs to scale your business.
           </p>
 
-          <div className="flex items-center gap-6">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full sm:w-auto">
             <a
               href="https://wa.me/919136239673?text=Hey%20I%20want%20to%20automate%20my%20workflow"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full px-8 py-3.5 text-sm font-medium hover:scale-105 transition-all duration-300 bg-gradient-to-r from-purple-600 to-violet-600 text-white hover:from-purple-500 hover:to-violet-500 hover:shadow-lg hover:shadow-purple-500/25"
+              className="w-full sm:w-auto rounded-full px-6 sm:px-8 py-3 sm:py-3.5 text-sm font-medium hover:scale-105 transition-all duration-300 bg-gradient-to-r from-purple-600 to-violet-600 text-white hover:from-purple-500 hover:to-violet-500 hover:shadow-lg hover:shadow-purple-500/25 text-center"
             >
               Start Automating
             </a>

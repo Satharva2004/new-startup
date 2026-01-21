@@ -184,3 +184,51 @@ img {
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(168, 85, 247, 0.1);
 }
+
+/* Mobile-specific utilities */
+@media (max-width: 640px) {
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Improve touch targets */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better text rendering on mobile */
+  * {
+    -webkit-tap-highlight-color: rgba(168, 85, 247, 0.2);
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Optimize spacing for tablets */
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Smooth scrolling for mobile */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Improve performance on mobile */
+@media (max-width: 768px) {
+  /* Reduce animations on mobile for better performance */
+  * {
+    will-change: auto;
+  }
+  
+  /* Optimize transforms */
+  .transform {
+    transform: translateZ(0);
+  }
+}

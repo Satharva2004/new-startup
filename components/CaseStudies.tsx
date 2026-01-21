@@ -130,7 +130,7 @@ const CaseStudies: React.FC = () => {
     return (
         <section
             ref={sectionRef}
-            className="relative py-32 overflow-hidden bg-[#050505]"
+            className="relative py-16 sm:py-24 md:py-32 overflow-hidden bg-[#050505]"
         >
             {/* Background Effects */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -153,24 +153,24 @@ const CaseStudies: React.FC = () => {
                 />
             </div>
 
-            <div className="relative max-w-7xl mx-auto px-6">
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
                 {/* Header */}
-                <div ref={titleRef} className="text-center mb-20">
-                    <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight mb-6">
+                <div ref={titleRef} className="text-center mb-12 sm:mb-16 md:mb-20">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-4 sm:mb-6">
                         <span className="text-white">Success </span>
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-purple-300 to-purple-200">
                             Stories
                         </span>
                     </h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed font-normal">
+                    <p className="text-gray-400 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed font-normal px-2">
                         Real results from businesses that transformed their operations with AI automation.
                     </p>
                 </div>
 
                 {/* Case Studies Cards - Two Column Layout */}
-                <div className="space-y-24">
+                <div className="space-y-12 sm:space-y-16 md:space-y-24">
                     {/* Row 1: First two cards */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 perspective-1000">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 perspective-1000">
                         {caseStudies.slice(0, 2).map((study, index) => (
                             <div
                                 key={study.id}
@@ -179,7 +179,7 @@ const CaseStudies: React.FC = () => {
                                 style={{ transformStyle: 'preserve-3d' }}
                             >
                                 {/* Card Container */}
-                                <div className="group relative h-[600px] rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.02]">
+                                <div className="group relative h-[500px] sm:h-[550px] md:h-[600px] rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.02]">
                                     {/* Background Image */}
                                     <div className="absolute inset-0">
                                         <img
@@ -197,26 +197,26 @@ const CaseStudies: React.FC = () => {
                                     <div className="absolute inset-0 rounded-3xl border border-purple-500/20 group-hover:border-purple-400/40 transition-colors duration-500" />
 
                                     {/* Content */}
-                                    <div className="relative h-full flex flex-col justify-between p-8">
+                                    <div className="relative h-full flex flex-col justify-between p-6 sm:p-8">
                                         {/* Top Section */}
                                         <div>
                                             {/* Industry Badge */}
-                                            <span className="inline-block px-4 py-2 rounded-xl text-sm font-semibold text-white bg-black/60 backdrop-blur-md border border-purple-500/30 mb-4">
+                                            <span className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold text-white bg-black/60 backdrop-blur-md border border-purple-500/30 mb-3 sm:mb-4">
                                                 {study.industry}
                                             </span>
 
                                             {/* Client */}
-                                            <div className="text-purple-400 font-semibold mb-3 tracking-wide text-sm uppercase">
+                                            <div className="text-purple-400 font-semibold mb-2 sm:mb-3 tracking-wide text-xs sm:text-sm uppercase">
                                                 {study.client}
                                             </div>
 
                                             {/* Title */}
-                                            <h3 className="text-3xl lg:text-4xl font-black text-white mb-4 tracking-tight leading-tight">
+                                            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-3 sm:mb-4 tracking-tight leading-tight">
                                                 {study.title}
                                             </h3>
 
                                             {/* Description */}
-                                            <p className="text-gray-300 text-base leading-relaxed mb-6">
+                                            <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6">
                                                 {study.description}
                                             </p>
                                         </div>
@@ -224,19 +224,19 @@ const CaseStudies: React.FC = () => {
                                         {/* Bottom Section */}
                                         <div>
                                             {/* Results - 3 Column Grid */}
-                                            <div className="grid grid-cols-3 gap-3 mb-6">
+                                            <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4 sm:mb-6">
                                                 {study.results.map((result, i) => {
                                                     const Icon = result.icon;
                                                     return (
                                                         <div
                                                             key={i}
-                                                            className="relative rounded-xl p-3 bg-black/40 backdrop-blur-md border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300"
+                                                            className="relative rounded-xl p-2 sm:p-3 bg-black/40 backdrop-blur-md border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300"
                                                         >
-                                                            <Icon className="w-4 h-4 text-purple-400 mb-2" />
-                                                            <div className="text-lg font-bold text-white mb-1">
+                                                            <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-purple-400 mb-1 sm:mb-2" />
+                                                            <div className="text-sm sm:text-base md:text-lg font-bold text-white mb-0.5 sm:mb-1">
                                                                 {result.value}
                                                             </div>
-                                                            <div className="text-[10px] text-gray-400 leading-tight">
+                                                            <div className="text-[9px] sm:text-[10px] text-gray-400 leading-tight">
                                                                 {result.metric}
                                                             </div>
                                                         </div>
@@ -245,11 +245,11 @@ const CaseStudies: React.FC = () => {
                                             </div>
 
                                             {/* Tags */}
-                                            <div className="flex flex-wrap gap-2">
+                                            <div className="flex flex-wrap gap-1.5 sm:gap-2">
                                                 {study.tags.map((tag, i) => (
                                                     <span
                                                         key={i}
-                                                        className="px-3 py-1.5 rounded-lg text-xs font-medium text-purple-200 bg-purple-500/20 backdrop-blur-sm border border-purple-400/30"
+                                                        className="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-medium text-purple-200 bg-purple-500/20 backdrop-blur-sm border border-purple-400/30"
                                                     >
                                                         {tag}
                                                     </span>
@@ -266,14 +266,14 @@ const CaseStudies: React.FC = () => {
                     </div>
 
                     {/* Row 2: Third card centered or full row */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 perspective-1000">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 perspective-1000">
                         <div
                             ref={(el) => (cardsRef.current[2] = el)}
                             className="case-study-card lg:col-start-1"
                             style={{ transformStyle: 'preserve-3d' }}
                         >
                             {/* Card Container */}
-                            <div className="group relative h-[600px] rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.02]">
+                            <div className="group relative h-[500px] sm:h-[550px] md:h-[600px] rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.02]">
                                 {/* Background Image */}
                                 <div className="absolute inset-0">
                                     <img
@@ -291,26 +291,26 @@ const CaseStudies: React.FC = () => {
                                 <div className="absolute inset-0 rounded-3xl border border-purple-500/20 group-hover:border-purple-400/40 transition-colors duration-500" />
 
                                 {/* Content */}
-                                <div className="relative h-full flex flex-col justify-between p-8">
+                                <div className="relative h-full flex flex-col justify-between p-6 sm:p-8">
                                     {/* Top Section */}
                                     <div>
                                         {/* Industry Badge */}
-                                        <span className="inline-block px-4 py-2 rounded-xl text-sm font-semibold text-white bg-black/60 backdrop-blur-md border border-purple-500/30 mb-4">
+                                        <span className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold text-white bg-black/60 backdrop-blur-md border border-purple-500/30 mb-3 sm:mb-4">
                                             {caseStudies[2].industry}
                                         </span>
 
                                         {/* Client */}
-                                        <div className="text-purple-400 font-semibold mb-3 tracking-wide text-sm uppercase">
+                                        <div className="text-purple-400 font-semibold mb-2 sm:mb-3 tracking-wide text-xs sm:text-sm uppercase">
                                             {caseStudies[2].client}
                                         </div>
 
                                         {/* Title */}
-                                        <h3 className="text-3xl lg:text-4xl font-black text-white mb-4 tracking-tight leading-tight">
+                                        <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-3 sm:mb-4 tracking-tight leading-tight">
                                             {caseStudies[2].title}
                                         </h3>
 
                                         {/* Description */}
-                                        <p className="text-gray-300 text-base leading-relaxed mb-6">
+                                        <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6">
                                             {caseStudies[2].description}
                                         </p>
                                     </div>
@@ -318,19 +318,19 @@ const CaseStudies: React.FC = () => {
                                     {/* Bottom Section */}
                                     <div>
                                         {/* Results - 3 Column Grid */}
-                                        <div className="grid grid-cols-3 gap-3 mb-6">
+                                        <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4 sm:mb-6">
                                             {caseStudies[2].results.map((result, i) => {
                                                 const Icon = result.icon;
                                                 return (
                                                     <div
                                                         key={i}
-                                                        className="relative rounded-xl p-3 bg-black/40 backdrop-blur-md border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300"
+                                                        className="relative rounded-xl p-2 sm:p-3 bg-black/40 backdrop-blur-md border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300"
                                                     >
-                                                        <Icon className="w-4 h-4 text-purple-400 mb-2" />
-                                                        <div className="text-lg font-bold text-white mb-1">
+                                                        <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-purple-400 mb-1 sm:mb-2" />
+                                                        <div className="text-sm sm:text-base md:text-lg font-bold text-white mb-0.5 sm:mb-1">
                                                             {result.value}
                                                         </div>
-                                                        <div className="text-[10px] text-gray-400 leading-tight">
+                                                        <div className="text-[9px] sm:text-[10px] text-gray-400 leading-tight">
                                                             {result.metric}
                                                         </div>
                                                     </div>
@@ -339,11 +339,11 @@ const CaseStudies: React.FC = () => {
                                         </div>
 
                                         {/* Tags */}
-                                        <div className="flex flex-wrap gap-2">
+                                        <div className="flex flex-wrap gap-1.5 sm:gap-2">
                                             {caseStudies[2].tags.map((tag, i) => (
                                                 <span
                                                     key={i}
-                                                    className="px-3 py-1.5 rounded-lg text-xs font-medium text-purple-200 bg-purple-500/20 backdrop-blur-sm border border-purple-400/30"
+                                                    className="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-medium text-purple-200 bg-purple-500/20 backdrop-blur-sm border border-purple-400/30"
                                                 >
                                                     {tag}
                                                 </span>
@@ -360,7 +360,7 @@ const CaseStudies: React.FC = () => {
                 </div>
 
                 {/* CTA Section */}
-                <div className="mt-32 text-center">
+                <div className="mt-16 sm:mt-24 md:mt-32 text-center px-4">
                     <div className="relative rounded-2xl overflow-hidden max-w-3xl mx-auto">
                         {/* Border */}
                         <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/20 via-transparent to-violet-500/20 p-[1px]">
@@ -376,21 +376,21 @@ const CaseStudies: React.FC = () => {
                         <div className="absolute inset-0 rounded-2xl border border-white/5" />
 
                         {/* Content */}
-                        <div className="relative p-12 md:p-16">
-                            <h2 className="text-3xl md:text-4xl font-black text-white mb-4 leading-tight tracking-tight">
+                        <div className="relative p-8 sm:p-12 md:p-16">
+                            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-3 sm:mb-4 leading-tight tracking-tight">
                                 Ready to Write Your Success Story?
                             </h2>
-                            <p className="text-gray-400 text-lg font-normal mb-8">
+                            <p className="text-gray-400 text-base sm:text-lg font-normal mb-6 sm:mb-8">
                                 Let's discuss how AI automation can transform your business
                             </p>
                             <a
                                 href="https://wa.me/919136239673?text=Hey%20I%20want%20to%20automate%20my%20workflow"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 hover:scale-105 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40"
+                                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-500 hover:to-violet-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300 hover:scale-105 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40"
                             >
                                 Start Your Project
-                                <ArrowRight className="w-5 h-5" />
+                                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                             </a>
                         </div>
                     </div>
